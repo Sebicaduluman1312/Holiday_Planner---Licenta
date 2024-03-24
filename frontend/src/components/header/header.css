@@ -1,0 +1,36 @@
+.bg-gray-custom{
+    background-color: black;
+}
+
+.links{
+    position: relative;
+    color: #e8e8e8;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.links::before{
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #e8e8e8;
+    height: 3px;
+    transition: transform 250ms ease-in-out;
+
+    transform: scaleX(0);
+}
+
+.links:hover::before, 
+.links:focus::before{
+    transform: scaleX(1);
+}
+
+.Menu, .X{
+    color: #e8e8e8;
+}
+
+.sign-up-button{
+    color: #e8e8e8;
+}

@@ -14,7 +14,7 @@ const NavLinks = () => {
         loggedIn ?
             loggedInLinks.map((link) => (
                 <NavLink to="/">
-                    <button className='links text-sm font-medium'>{link}</button>
+                    <button className='links text-sm text-primary-white font-medium'>{link}</button>
                 </NavLink>
             )) :
             loggedOutLinks.map((link) => (

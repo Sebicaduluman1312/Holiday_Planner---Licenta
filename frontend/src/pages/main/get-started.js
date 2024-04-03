@@ -1,4 +1,4 @@
-const SignUp = () => {
+const GetStarted = () => {
 
 
     return ( 
@@ -19,4 +19,4 @@ const SignUp = () => {
      );
 }
  
-export default SignUp;
+export default GetStarted;

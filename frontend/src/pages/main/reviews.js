@@ -1,6 +1,6 @@
 const Reviews = () => {
     return ( 
-        <div className="review-container bg-primary-black flex flex-col items-center justify-center">
+        <section id="section-Reviews" className="review-container bg-primary-black flex flex-col items-center justify-center">
             <h1 className="text-5xl text-primary-white font-bold mt-5">Reviews</h1>
             <div className="cards-container mt-10 w-full">
                 <li className="reviews flex text-primary-white w-full items-center justify-evenly h-60 mb-20">
@@ -15,7 +15,7 @@ const Reviews = () => {
                     </ul>
                 </li>
             </div>
-        </div>
+        </section>
      );
 }
  

@@ -10,6 +10,14 @@ const NavLinks = () => {
     const loggedInLinks = ['Explore', 'Comunity Trips', 'Settings'];
     let loggedIn = false;  
 
+    const scrollToSection = (id) => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+
     return ( 
         loggedIn ?
             loggedInLinks.map((link) => (
@@ -17,10 +25,13 @@ const NavLinks = () => {
                     <button className='links text-sm text-primary-white font-medium'>{link}</button>
                 </NavLink>
             )) :
-            loggedOutLinks.map((link) => (
-                <NavLink to={`/#section-${link}`}>
-                    <button className='links text-sm font-medium'>{link}</button>
-                </NavLink>
+            loggedOutLinks.map((link, index) => ( 
+                link === 'Sign up' ? 
+                    <NavLink to='/sign-up'>
+                        <button key={index} className='links text-sm font-medium' > {link} </button>
+                    </NavLink> :
+
+                    <button key={index} className='links text-sm font-medium' onClick={() => scrollToSection(`section-${link}`)} >{link}</button>
             )) 
     );
 }

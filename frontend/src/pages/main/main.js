@@ -1,4 +1,4 @@
-import SignUp from "./sign-up";
+import GetStarted from "./get-started";
 import About from "./about";
 import Reviews from "./reviews";
 import ContactUs from "./contact";
@@ -6,7 +6,7 @@ import ContactUs from "./contact";
 const MainPageContent = () => {
     return ( 
         <div className="hero-container w-full h-full bg-primary-white">
-            <SignUp />
+            <GetStarted />
             <About />
             <Reviews />
             <ContactUs />

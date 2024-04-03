@@ -1,6 +1,6 @@
 const About = () => {
     return ( 
-        <div className="about-container flex p-10">
+        <section id="section-About" className="about-container flex p-10">
             <div className="left-about h-96 w-1/2 mr-5 bg-primary-black">
             </div>
             <div className="right-about w-1/2 flex flex-col justify-center items-right mb-20">
@@ -12,7 +12,7 @@ const About = () => {
                      fascinating attractions.
                 </p>
             </div>
-        </div>
+        </section>
      );
 }
  

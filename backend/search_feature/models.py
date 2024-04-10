@@ -1,6 +1,7 @@
 from django.db import models
 
-class Hotel (models.Model):
+
+class Hotel(models.Model):
     id = models.BigIntegerField(primary_key=True)
     lat = models.FloatField()
     lon = models.FloatField()
@@ -15,7 +16,8 @@ class Hotel (models.Model):
     def __str__(self):
         return self.name
 
-class Restaurant (models.Model):
+
+class Restaurant(models.Model):
     id = models.BigIntegerField(primary_key=True)
     lat = models.FloatField()
     lon = models.FloatField()
@@ -32,5 +34,14 @@ class Restaurant (models.Model):
         return self.name
 
 
+class PopularDestinations(models.Model):
+    fsq_id = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    country = models.CharField(max_length=255)
+    locality = models.CharField(max_length=255)
+    destination_category = models.CharField(max_length=255)
+    category_icon = models.CharField(max_length=255)
+    photo_url = models.CharField(max_length=255)
 
-
+    def __str__(self):
+        return self.name

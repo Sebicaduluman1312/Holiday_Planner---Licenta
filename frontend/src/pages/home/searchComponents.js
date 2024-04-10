@@ -36,8 +36,8 @@ const SearchComponent = () => {
                 
                 <div className="criterial-search w-2/3 flex justify-between mb-4">
                     {
-                        criterialNames.map((item) => (
-                            <div className='text-primary-black font-semibold'>
+                        criterialNames.map((item, index) => (
+                            <div key={index} className='text-primary-black font-semibold'>
                                 <FontAwesomeIcon icon={criterialObjects[item]} style={{color: "#0077C0"}} className='mr-2' />
                                 {item}
                             </div>

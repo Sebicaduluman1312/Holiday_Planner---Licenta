@@ -43,7 +43,7 @@ class PopularDestinationsView(APIView):
 
         return Response({
             'message': 'Din baza de date!',
-            'cotent': destinations_serializer.data
+            'content': destinations_serializer.data
         })
 
         # response = request_popular_destination()

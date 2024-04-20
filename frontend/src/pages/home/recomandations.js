@@ -56,9 +56,9 @@ const RecomandationComponent = () => {
                 <Carousel 
                     className='h-full w-full ' 
                     responsive={responsive}
-                    // infinite={true}
-                    // autoPlay={true}
-                    // autoPlaySpeed={4000}
+                    infinite={true}
+                    autoPlay={true}
+                    autoPlaySpeed={4000}
                 >
                     {
                         destinations.map((dest, index) => (

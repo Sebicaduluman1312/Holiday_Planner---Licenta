@@ -3,7 +3,7 @@ const PopularSearch = () => {
     const popular_searches = ['Paris', 'Madrid', 'Barcelona', 'Vienna', 'London', 'Roma', 'Milano', 'Berlin', 'Bucuresti', 'Vaslui'];
 
     return (
-        <div className="popular-container flex flex-col items-center mb-8 transform -translate-y-1/2 w-5/6">
+        <div className="popular-container flex flex-col items-center mb-8 w-5/6">
             <p className="text-lg font-semibold">Popular Search</p>
             <div className="popular-searches w-4/5 grid grid-cols-5 gap-4 mt-4 text-sm font-semibold text-primary-black">
                 { 

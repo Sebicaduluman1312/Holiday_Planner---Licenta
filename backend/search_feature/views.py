@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Hotel, Restaurant, PopularDestinations
 from .serializers import HotelSerializer, RestaurantSerializer, PopularDestiatiosSerializer
+from .utils.autocomplete_search import get_autocomplete_destination
 from .utils.popular_destination_manager import request_popular_destination, get_custom_destination_array, \
     save_final_destination
 from .utils.photos_manager import add_photo_to_location
@@ -56,3 +57,10 @@ class PopularDestinationsView(APIView):
         #     return Response({'message': 'Datele au fost salvate in baza de date', 'content': updated_destinations})
         # else:
         #     return Response({'message': 'Failed to fetch popular destinations'})
+
+class AutocompleteDestinationView(APIView):
+    def get(self, request):
+        string = request.query_params['string']
+        destinations = get_autocomplete_destination(string)
+
+        return Response({'destinations': destinations})

@@ -8,7 +8,7 @@ const PopularCard = (props) => {
                 <img src={details.photo_url} alt="photo_destination" className="h-full w-full object-cover rounded-lg"/>
             </div>
             <div className="data-about-location h-full w-full rounded-lg flex flex-col absolute top-0 left-0 bottom-0 right-0" >
-                <div className="other-details w-full flex justify-between items-center p-2 text-sm font-semibold text-primary-white invisible">
+                <div className="other-details w-full flex justify-between items-center p-2 text-sm font-semibold text-primary-white">
                     <div className="category h-full w-1/2">
                         <div className="flex h-1/2 items-center">
                             <img src={details.category_icon} alt="category_icon" className="h-1/2"/>

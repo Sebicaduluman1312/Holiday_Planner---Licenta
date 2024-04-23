@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth import get_user_model
 
 class Hotel(models.Model):
     id = models.BigIntegerField(primary_key=True)
@@ -45,3 +45,9 @@ class PopularDestinations(models.Model):
 
     def __str__(self):
         return self.name
+
+
+User = get_user_model()
+class Searches(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    location = models.CharField(max_length=255)

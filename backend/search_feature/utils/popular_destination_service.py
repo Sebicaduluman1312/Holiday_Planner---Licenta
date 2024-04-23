@@ -1,5 +1,5 @@
 import requests
-from ..serializers import PopularDestiatiosSerializer
+from ..serializers import PopularDestinationsSerializer
 def request_popular_destination():
     url = "https://api.foursquare.com/v3/places/search?near=Europe&sort=POPULARITY&limit=10"
     headers = {
@@ -10,11 +10,13 @@ def request_popular_destination():
 
     return response
 
-def format_popular_data(popular_destination_object):
+def format_data(popular_destination_object):
     fsq_id = popular_destination_object['fsq_id']
     name = popular_destination_object['name']
     country = popular_destination_object['location']['country']
-    locality = popular_destination_object['location']['locality']
+    locality = ''
+    if 'locality' in popular_destination_object['location']:
+        locality = popular_destination_object['location']['locality']
     destination_category = popular_destination_object['categories'][0]['name']
     prefix_icon = popular_destination_object['categories'][0]['icon']['prefix']
     suffix_icon = popular_destination_object['categories'][0]['icon']['suffix']
@@ -38,13 +40,13 @@ def get_custom_destination_array(response):
     custom_array = []
 
     for destination in destinations_array:
-        custom_array.append(format_popular_data(destination))
+        custom_array.append(format_data(destination))
 
     return custom_array
 
 def save_final_destination(data):
     for dest in data:
-        serializer = PopularDestiatiosSerializer(data=dest)
+        serializer = PopularDestinationsSerializer(data=dest)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 

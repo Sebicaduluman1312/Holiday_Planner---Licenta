@@ -22,3 +22,4 @@ class SearchesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Searches
         fields = '__all__'
+

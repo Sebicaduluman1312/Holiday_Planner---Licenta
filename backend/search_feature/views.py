@@ -57,10 +57,12 @@ class SearchLocations(APIView):
             if len(database_locations):
                 formated_database_locations = add_photo_to_location(
                     get_api_details_for_database_location(database_locations))
+            else:
+                formated_database_locations = []
 
             return Response({'database_locations': formated_database_locations, 'api_locations': formated_api_locations}, HTTP_200_OK)
-        except:
-            return Response({'message': 'Internal problem searching locations'}, HTTP_409_CONFLICT)
+        except Exception as e:
+            return Response({'message': f'Internal problem searching locations: {e}'}, HTTP_409_CONFLICT)
 
 class SearchLocationCounter(APIView):
     def post(self, request):
@@ -92,7 +94,7 @@ class SearchLocationCounter(APIView):
         try:
             top_10_destinations = Searches.objects.values('location').annotate(search_count=Count('location')).order_by('-search_count')[:10]
 
-            return Response({'top_10_locations':top_10_destinations}, HTTP_201_CREATED)
+            return Response({'top_10_locations': top_10_destinations}, HTTP_201_CREATED)
 
         except:
             return Response({'message': 'Internal error getting popular locations!'}, HTTP_409_CONFLICT)

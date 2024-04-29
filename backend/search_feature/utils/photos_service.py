@@ -11,13 +11,11 @@ def add_photo_to_location(destinations_array):
             "accept": "application/json",
             "Authorization": "fsq37BKRre0kAHrDWfzFGWqsClM0W8rQdv3npnqZKJmenow="
         }
-
+        #TODO status
         response = requests.get(url, headers=headers)
-        print(len(response.text), '----------------', fsq_id)
         if len(response.text) > 50:
             photo_object = response.json()
 
-            print(photo_object, '**************')
             photo_url = photo_object[0]['prefix'] + 'original' + photo_object[0]['suffix']
             destination['photo_url'] = photo_url
             updated_destinations_array.append(destination)

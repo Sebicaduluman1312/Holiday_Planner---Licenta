@@ -15,20 +15,24 @@ def format_data(popular_destination_object):
     name = popular_destination_object['name']
     country = popular_destination_object['location']['country']
     locality = ''
-    if 'locality' in popular_destination_object['location']:
+    if 'location' in popular_destination_object and 'locality' in popular_destination_object['location']:
         locality = popular_destination_object['location']['locality']
     destination_category = popular_destination_object['categories'][0]['name']
     prefix_icon = popular_destination_object['categories'][0]['icon']['prefix']
     suffix_icon = popular_destination_object['categories'][0]['icon']['suffix']
     category_icon = prefix_icon + str(120) + suffix_icon
+    lat = popular_destination_object['geocodes']['main']['latitude']
+    lon = popular_destination_object['geocodes']['main']['longitude']
 
     custom_destination_attributes = {
         'fsq_id': str(fsq_id),
+        'lat': float(lat),
+        'lon': float(lon),
         'name': str(name),
         'country': str(country),
         'locality': str(locality),
         'destination_category': str(destination_category),
-        'category_icon': str(category_icon)
+        'category_icon': str(category_icon),
     }
 
     return custom_destination_attributes

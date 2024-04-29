@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_409_CONFLICT, HTTP_401_UNAUTHORIZED
 from .serializers import UserSerializer
 from .models import User
+
+from user_profile.serializers import UserProfileSerializer
 import jwt, datetime
 
 
@@ -12,10 +14,16 @@ class RegisterView(APIView):
         if User.objects.filter(email=email).exists():
             return Response({'message': 'Email already exists'}, status=HTTP_409_CONFLICT)
         else:
-            serializer = UserSerializer(data=request.data)
-            serializer.is_valid(
-                raise_exception=True)  # aceasta functie valideaza datele din serializer, si le va stoca in validated_data
-            serializer.save()
+            user_serializer = UserSerializer(data=request.data)
+            user_serializer.is_valid(raise_exception=True)  # aceasta functie valideaza datele din serializer, si le va stoca in validated_data
+            user = user_serializer.save()
+
+            profile_data = {
+                'user': user.id
+            }
+            profile_serializer = UserProfileSerializer(data=profile_data)
+            profile_serializer.is_valid(raise_exception=True)
+            profile_serializer.save()
 
             return Response({'message': 'Account successfully created'}, status=201)
 

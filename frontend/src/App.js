@@ -5,6 +5,7 @@ import SignUp from './pages/sign-up/SignUp';
 import SignIn from './pages/sign-in/SignIn';
 import PrivateRoute from './utils/PrivateRoutes';
 import HomeComponent from './pages/home/home';
+import MainSearchPage from './pages/search/mainSearchPage';
 
 function App() {
 
@@ -19,6 +20,8 @@ function App() {
           <Route exact path="/sign-in" component={SignIn}/>
 
           <PrivateRoute exact path="/home" component={HomeComponent} />
+
+          <PrivateRoute exact path="/search" component={MainSearchPage}/>
 
         </Switch>
       </Router>

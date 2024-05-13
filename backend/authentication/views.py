@@ -49,6 +49,7 @@ class LoginView(APIView):
 
         data = {
             'id': user.id,
+            'email': user.email,
             'exp': exp_time_formated,
             'lat': created_at_formated,
         }

@@ -36,7 +36,9 @@ const NavBar = () => {
                 </Link>
             </div>
             <div className="settings w-1/3 flex items-center justify-end ">
-                <button className="text-sm text-primary-black-blue font-semibold mr-6">Profile</button>
+                <button className="text-sm text-primary-black-blue font-semibold mr-6">
+                    <Link to='/profile'>Profile</Link>
+                </button>
                 <button className="text-sm text-primary-white font-semibold  bg-primary-black-blue rounded-lg px-8 py-2" onClick={handleLogOut}>Logout</button>
             </div>
         </div>

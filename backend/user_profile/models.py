@@ -19,6 +19,9 @@ class UserProfile(models.Model):
     phone_number = models.CharField(max_length=50, null=True)
     short_status = models.CharField(max_length=50, null=True)
     complete_profile = models.BooleanField(default=False, null=True)
+    city = models.CharField(max_length=50, null=True)
+    country = models.CharField(max_length=50, null=True)
+    email = models.CharField(max_length=255, null=True)
 
 
 class LikedLocations(models.Model):

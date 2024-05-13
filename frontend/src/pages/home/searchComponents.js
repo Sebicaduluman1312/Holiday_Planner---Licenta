@@ -29,29 +29,28 @@ const SearchComponent = () => {
         setInputValue(event.target.value);
     }
 
-    const fetchAutocompleteData = async () => {
-        if (inputValue.length > 2) {
-            try {
-                const generatedDestinations = await autocompleteFunction(inputValue);
-                const newAutocompleteDestinations = Object.values(generatedDestinations);
-                setAutocompleteDestinations(newAutocompleteDestinations);
-            } catch (error) {
-                console.error('Error fetching autocomplete data', error)
+    useEffect(() => {
+        const fetchAutocompleteData = async () => {
+            if (inputValue.length > 2) {
+                try {
+                    const generatedDestinations = await autocompleteFunction(inputValue);
+                    const newAutocompleteDestinations = Object.values(generatedDestinations);
+                    setAutocompleteDestinations(newAutocompleteDestinations);
+                } catch (error) {
+                    console.error('Error fetching autocomplete data', error)
+                }
+            }
+            else {
+                setAutocompleteDestinations([]);
             }
         }
-        else {
-            setAutocompleteDestinations([]);
-        }
-    }
     
-    useEffect(() => {
         fetchAutocompleteData();
-    }, [inputValue]);
-
+    }, [inputValue]); 
+    
 
     ///Modal Autocomplete
     const [modalOn, setModalOn] = useState(false);
-
 
     const handleInputFocus = () => {
         setModalOn(true);
@@ -101,7 +100,7 @@ const SearchComponent = () => {
             category = 'all';
 
 
-        history.push(`/search?category=${categoryField}&location=${inputValue}`);
+        history.push(`/search?category=${category}&location=${inputValue}`);
 
     }
 

@@ -21,9 +21,9 @@ available_type_of_destination_database = ['hotel', 'restaurant', 'cafe', 'superm
 def get_locations_from_API(category, near, sort):
     url = ''
     if category == 'all':
-        url = f"https://api.foursquare.com/v3/places/search?near={near}&sort=POPULARITY&limit=4"
+        url = f"https://api.foursquare.com/v3/places/search?near={near}&sort=POPULARITY&limit=1"
     else:
-        url = f"https://api.foursquare.com/v3/places/search?categories={api_category_id[category]}&near={near}&sort={sort}&limit=10"
+        url = f"https://api.foursquare.com/v3/places/search?categories={api_category_id[category]}&near={near}&sort={sort}&limit=1"
 
     headers = {
         "accept": "application/json",
@@ -54,7 +54,7 @@ def get_locations_from_database(category, location):
             response = HotelSerializer(hotel, many=True)
             return response.data
         elif category == 'restaurant':
-            restaurant = Restaurant.filter(addr_city=location)
+            restaurant = Restaurant.objects.filter(addr_city=location)[:10]
             response = RestaurantSerializer(restaurant, many=True)
             return response.data
 

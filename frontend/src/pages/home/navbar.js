@@ -5,8 +5,6 @@ import { logOut } from "../../utils/auth";
 
 const NavBar = () => {
 
-
-
     const handleLogOut = () => {
         logOut();
     }

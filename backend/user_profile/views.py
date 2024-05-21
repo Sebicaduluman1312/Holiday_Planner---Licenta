@@ -112,3 +112,24 @@ class LikeLocationView(APIView):
 
         except Exception as e:
             return Response({'message': f'Internal problem in deletting liked locations: {e}'}, HTTP_409_CONFLICT)
+
+class CheckLikedLocation(APIView):
+    def post(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if token is None:
+            return Response({'message': 'User not logged in!'}, HTTP_401_UNAUTHORIZED)
+
+        try:
+            user_data = jwt.decode(token, 'secret', algorithms=['HS256'])
+            id_user = user_data['id']
+
+            liked_data = request.data.get('data')
+
+            if LikedLocations.objects.filter(user=id_user, fsq_id=liked_data['fsq_id']).exists():
+                return Response({'message': 'true'}, HTTP_200_OK)
+
+            return Response({'message': 'false'}, HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'message': f'Internal problem in deletting liked locations: {e}'}, HTTP_409_CONFLICT)

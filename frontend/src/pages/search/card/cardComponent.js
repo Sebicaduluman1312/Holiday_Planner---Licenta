@@ -9,6 +9,8 @@ import Checkbox from '@mui/material/Checkbox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
 
+import { useState, useEffect } from 'react';
+
 const CardComponent = (props) => {
 
     const fsq_id = props.props.fsq_id;
@@ -20,9 +22,39 @@ const CardComponent = (props) => {
     const photo_url = props.props.photo_url;
 
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
-
     const data = {'data' : props.props};
-    console.log(data);
+
+    const [isLiked, setIsLiked] = useState(false);
+
+    useEffect(() => {
+        const checkIfLocationIsLiked = async () => {
+            try{
+                const response = await fetch(`http://localhost:8000/api/user/is_liked/`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                if(result.message === 'true')
+                    setIsLiked(true);
+                else
+                    setIsLiked(false);
+
+            } catch (error) {
+                console.log(error.message);
+            } 
+        }
+        checkIfLocationIsLiked();
+    }, []);
+
 
     const handleLikeAction = async (event) => {
         if (event.target.checked) {
@@ -41,10 +73,11 @@ const CardComponent = (props) => {
                     throw new Error(`Error: ${response.status}`);
                 }
                 const result = await response.json();
-                console.log(result);
             } catch (error) {
                 console.log(error.message);
             }
+            setIsLiked(true);
+            
         } else {
 
             /// Dislike card
@@ -65,6 +98,7 @@ const CardComponent = (props) => {
             } catch (error) {
                 console.log(error.message);
             }
+            setIsLiked(false);
 
         }
     };
@@ -97,7 +131,7 @@ const CardComponent = (props) => {
                 sx={{ marginLeft: 1 }}
             >
                 <Button size="small" id={fsq_id}>Details</Button>
-                <Checkbox {...label} icon={<FavoriteBorder />} checkedIcon={<Favorite />} onChange={handleLikeAction}/>
+                <Checkbox {...label} icon={<FavoriteBorder />} checkedIcon={<Favorite />} onChange={handleLikeAction} checked={isLiked}/>
 
             </CardActions>
         </Card>

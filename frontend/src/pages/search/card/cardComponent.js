@@ -5,6 +5,9 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import Favorite from '@mui/icons-material/Favorite';
 
 const CardComponent = (props) => {
 
@@ -15,6 +18,56 @@ const CardComponent = (props) => {
     const locality = props.props.locality;
     const destination_category = props.props.destination_category;
     const photo_url = props.props.photo_url;
+
+    const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
+    const data = {'data' : props.props};
+    console.log(data);
+
+    const handleLikeAction = async (event) => {
+        if (event.target.checked) {
+
+            /// Like card
+            try {
+                const response = await fetch('http://localhost:8000/api/user/like/', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+                const result = await response.json();
+                console.log(result);
+            } catch (error) {
+                console.log(error.message);
+            }
+        } else {
+
+            /// Dislike card
+            try {
+                const response = await fetch('http://localhost:8000/api/user/like/', {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+                const result = await response.json();
+                console.log(result);
+            } catch (error) {
+                console.log(error.message);
+            }
+
+        }
+    };
 
     return ( 
         <Card sx={{ width: 260 }}>
@@ -44,6 +97,8 @@ const CardComponent = (props) => {
                 sx={{ marginLeft: 1 }}
             >
                 <Button size="small" id={fsq_id}>Details</Button>
+                <Checkbox {...label} icon={<FavoriteBorder />} checkedIcon={<Favorite />} onChange={handleLikeAction}/>
+
             </CardActions>
         </Card>
     );

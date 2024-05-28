@@ -35,7 +35,8 @@ const SearchComponent = () => {
                 try {
                     const generatedDestinations = await autocompleteFunction(inputValue);
                     const newAutocompleteDestinations = Object.values(generatedDestinations);
-                    setAutocompleteDestinations(newAutocompleteDestinations);
+                    const removeDuplicates = [... new Set(newAutocompleteDestinations)];
+                    setAutocompleteDestinations(removeDuplicates);
                 } catch (error) {
                     console.error('Error fetching autocomplete data', error)
                 }

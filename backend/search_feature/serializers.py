@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Hotel, Restaurant, PopularDestinations, Searches
+from .models import Hotel, Restaurant, PopularDestinations, Searches, Review, ReplyReview
 
 
 class HotelSerializer(serializers.ModelSerializer):
@@ -22,4 +22,24 @@ class SearchesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Searches
         fields = '__all__'
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
+
+class ReviewSerializerWithoutAuthor(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
+        extra_kwargs = {
+            'author': {'write_only': True}
+        }
+
+class ReplyReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReplyReview
+        fields = '__all__'
+
+
 

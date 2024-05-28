@@ -21,9 +21,9 @@ available_type_of_destination_database = ['hotel', 'restaurant', 'cafe', 'superm
 def get_locations_from_API(category, near, sort):
     url = ''
     if category == 'all':
-        url = f"https://api.foursquare.com/v3/places/search?near={near}&sort=POPULARITY&limit=1"
+        url = f"https://api.foursquare.com/v3/places/search?near={near}&sort=POPULARITY&limit=30"
     else:
-        url = f"https://api.foursquare.com/v3/places/search?categories={api_category_id[category]}&near={near}&sort={sort}&limit=1"
+        url = f"https://api.foursquare.com/v3/places/search?categories={api_category_id[category]}&near={near}&sort={sort}&limit=30"
 
     headers = {
         "accept": "application/json",

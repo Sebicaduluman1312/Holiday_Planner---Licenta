@@ -14,3 +14,5 @@ class LikedLocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = LikedLocations
         fields = '__all__'
+
+

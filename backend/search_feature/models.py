@@ -54,3 +54,24 @@ class Searches(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     location = models.CharField(max_length=255)
 
+
+class Review(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    destination_id = models.CharField(max_length=255)
+    rating = models.PositiveIntegerField()
+    comment = models.TextField()
+    likes = models.PositiveIntegerField(default=0)
+    dislikes = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Review by {self.author.username} for destination {self.destination_id}'
+
+class ReplyReview(models.Model):
+    review = models.ForeignKey(Review, related_name='replies', on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Reply by {self.author.username} to review {self.review.id}'

@@ -77,7 +77,7 @@ const CardComponent = (props) => {
                 console.log(error.message);
             }
             setIsLiked(true);
-            
+
         } else {
 
             /// Dislike card
@@ -101,6 +101,11 @@ const CardComponent = (props) => {
             setIsLiked(false);
 
         }
+    };
+
+    const handleClickDetails = (event) => {
+        const id_location  = event.target.id;
+        window.location.href = `http://localhost:3000/details?location=${id_location}`;
     };
 
     return ( 
@@ -130,7 +135,7 @@ const CardComponent = (props) => {
             <CardActions
                 sx={{ marginLeft: 1 }}
             >
-                <Button size="small" id={fsq_id}>Details</Button>
+                <Button size="small" id={fsq_id} onClick={handleClickDetails}>Details</Button>
                 <Checkbox {...label} icon={<FavoriteBorder />} checkedIcon={<Favorite />} onChange={handleLikeAction} checked={isLiked}/>
 
             </CardActions>

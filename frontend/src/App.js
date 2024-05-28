@@ -7,6 +7,7 @@ import PrivateRoute from './utils/PrivateRoutes';
 import HomeComponent from './pages/home/home';
 import MainSearchPage from './pages/search/mainSearchPage';
 import MainProfilePage from './pages/profile/mainProfilePage';
+import LocationDetails from './pages/details/locationDetails';
 
 function App() {
 
@@ -25,6 +26,9 @@ function App() {
           <PrivateRoute exact path="/search" component={MainSearchPage}/>
 
           <PrivateRoute exact path="/profile" component={MainProfilePage}/>
+
+          <PrivateRoute exact path="/details" component={LocationDetails}/>
+
 
         </Switch>
       </Router>

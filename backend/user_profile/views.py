@@ -132,4 +132,4 @@ class CheckLikedLocation(APIView):
             return Response({'message': 'false'}, HTTP_200_OK)
 
         except Exception as e:
-            return Response({'message': f'Internal problem in deletting liked locations: {e}'}, HTTP_409_CONFLICT)
+            return Response({'message': f'Internal problem in checking liked locations: {e}'}, HTTP_409_CONFLICT)

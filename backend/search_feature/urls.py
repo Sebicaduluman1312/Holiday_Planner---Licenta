@@ -10,5 +10,7 @@ urlpatterns = [
     path('details/', views.DetailedDescription.as_view(), name='detail_description'),
     path('reviews/', views.ReviewDestination.as_view(), name='reviews'),
     path('reply_review/', views.ReplyReviewView.as_view(), name='reply_reviews'),
+    path('description/', views.DescriptionAttraction.as_view(), name='description_attraction'),
+    path('related/', views.RelatedLocations.as_view(), name='related_location')
 ]
 

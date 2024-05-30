@@ -12,7 +12,7 @@ from .utils.locations_service import get_locations_from_API, format_locations_re
 from .utils.popular_destination_service import request_popular_destination, get_custom_destination_array, \
     save_final_destination
 from .utils.photos_service import add_photo_to_location
-from .utils.details_services import get_destination_details, get_destination_photos, get_destination_rating
+from .utils.details_services import get_destination_details, get_destination_photos, get_destination_rating, get_description, get_related_attractions
 from .utils.reviews_service import get_api_reviews, make_review_object, get_id_user
 
 
@@ -272,3 +272,30 @@ class ReplyReviewView(APIView):
             return Response({'message': 'Reply not found'}, HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'message': f'Internal error in UPDATING replies for review! Error: {e}'}, HTTP_409_CONFLICT)
+
+class DescriptionAttraction(APIView):
+    def post(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if token is None:
+            return Response({'message': 'User not logged in!'}, HTTP_401_UNAUTHORIZED)
+        try:
+            description = get_description(request.data['location'], request.data['city'])
+            return Response({'data': description}, HTTP_200_OK)
+        except Exception as e:
+            return Response({'message': f'Internal error in getting description for location! Error: {e}'},
+                            HTTP_409_CONFLICT)
+
+class RelatedLocations(APIView):
+    def post(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if token is None:
+            return Response({'message': 'User not logged in!'}, HTTP_401_UNAUTHORIZED)
+        try:
+            related_attractions = get_related_attractions(request.data['lat'], request.data['lon'])
+
+            return Response({'data': related_attractions}, HTTP_200_OK)
+        except Exception as e:
+            return Response({'message': f'Internal error in getting related locations! Error: {e}'},
+                            HTTP_409_CONFLICT)

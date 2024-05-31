@@ -43,7 +43,7 @@ const RelatedComponents = ({latitude, longitude, fsq_id}) => {
     return ( 
         <div className="w-5/6">
             <h3 className="text-2xl font-semibold mb-4">Similar experiences</h3>
-            <div className="places w-full mb-10 flex justify-between gap-2">
+            <div className="places w-full flex justify-between gap-2">
 
                     {relatedPlaces ? (
                         

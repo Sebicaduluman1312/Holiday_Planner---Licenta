@@ -154,7 +154,7 @@ class ReviewDestination(APIView):
                 serializer.save()
                 return Response(serializer.data, status=HTTP_201_CREATED)
             else:
-                return Response(serializer.errors, status=HTTP_409_CONFLICT)
+                return Response(serializer.errors, status=HTTP_404_NOT_FOUND)
         except:
             return Response({'message': 'Internal error in posting review'}, HTTP_409_CONFLICT)
 

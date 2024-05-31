@@ -1,8 +1,14 @@
 import Rating from '@mui/material/Rating';
 
 const RecomendedCard = (props) => {
+
+    const handleRedirect = (id) => {
+        window.location.href = `http://localhost:3000/details?location=${id}`;
+    };
+
+
     return ( 
-        <div className="w-1/4 h-96 flex flex-col rounded-xl">
+        <div className="w-1/4 h-96 flex flex-col rounded-xl cursor-pointer" onClick={() => handleRedirect(props.details.fsq_id)}>
             <img src={props.details.photo_url} alt="" className="h-3/5 object-cover rounded-xl"/>
             <p className="text-normal font-semibold pl-2 pt-2 pr-2 mt-2">{props.details.name}</p>
             <div className='flex ml-2 mt-1'>

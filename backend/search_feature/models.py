@@ -58,7 +58,7 @@ class Searches(models.Model):
 class Review(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     destination_id = models.CharField(max_length=255)
-    rating = models.PositiveIntegerField()
+    rating = models.FloatField()
     comment = models.TextField()
     likes = models.PositiveIntegerField(default=0)
     dislikes = models.PositiveIntegerField(default=0)

@@ -58,8 +58,8 @@ const PhotoComponent = ({ photos, name }) => {
                             </IconButton>
                         </div>
                         <div className="photos flex flex-grow overflow-hidden">
-                            <div className="actual_photo h-full w-3/5 bg-primary-white p-4">
-                                <img src={mainPhoto} alt="" className="object-cover h-full w-full rounded-xl"/>
+                            <div className="actual_photo h-full w-3/5 bg-primary-white p-4 rounded-xl">
+                                <img src={mainPhoto} alt="" className="object-contain h-full w-full rounded-xl"/>
                             </div>
                             <div className="galery h-full w-2/5 bg-primary-white ml-2 overflow-auto">
                                 <div className="grid grid-cols-2 gap-2 p-4">

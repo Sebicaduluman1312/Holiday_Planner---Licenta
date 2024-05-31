@@ -5,6 +5,7 @@ import MainDetail from "./main_container/main_detail";
 import RelatedComponents from "./relatedPlaces";
 import DescriptionComponent from "./description";
 import LocationComponent from "./main_container/location";
+import ReviewLocation from "./main_container/review_location/reviewComponent";
 
 const LocationDetails = () => {
 
@@ -66,6 +67,12 @@ const LocationDetails = () => {
 
             {details && details.data ? (
                 <RelatedComponents latitude={details.data.lat} longitude={details.data.lon} fsq_id={location_id}/>
+            ) : (
+                <p>Loading...</p>
+            )}
+
+            {details && details.data ? (
+                <ReviewLocation rating={details.data.rating} id={location_id}/>
             ) : (
                 <p>Loading...</p>
             )}

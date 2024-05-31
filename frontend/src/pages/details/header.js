@@ -17,7 +17,6 @@ const TitleAttraction = ({data, id_location, photo_url, title, address, category
     data_to_fetch['photo_url'] = photo_url;
     delete data_to_fetch['photos'];
     data_to_fetch['fsq_id'] = id_location;
-    console.log(data);
 
     const data_to_send = {
         data: data_to_fetch
@@ -85,7 +84,6 @@ const TitleAttraction = ({data, id_location, photo_url, title, address, category
                     throw new Error(`Error: ${response.status}`);
                 }
                 const result = await response.json();
-                console.log(result);
             } catch (error) {
                 console.log(error.message);
             }

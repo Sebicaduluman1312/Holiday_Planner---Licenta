@@ -24,6 +24,8 @@ const ReviewCommunity = ({ reviews }) => {
     const [editingReview, setEditingReview] = useState(null);
     const [editedComment, setEditedComment] = useState("");
     const [localReviews, setLocalReviews] = useState([]);
+    const [localReplies, setLocalReplies] = useState({});
+
 
     useEffect(() => {
         const fetchUserDetails = async () => {
@@ -150,7 +152,7 @@ const ReviewCommunity = ({ reviews }) => {
     
                     const data = await response.json();
 
-                    setComments(prevObject => ({
+                    setLocalReplies(prevObject => ({
                         ...prevObject,
                         [id_review]: data.data
                     }));
@@ -226,7 +228,7 @@ const ReviewCommunity = ({ reviews }) => {
 
     /// delete reply 
 
-    const handleDeleteReply = async (id_reply) => {
+    const handleDeleteReply = async (id_reply, id_review) => {
         const id_object = { id: id_reply };
         try {
             const response = await fetch(`http://localhost:8000/api/search/reply_review/`, {
@@ -241,6 +243,11 @@ const ReviewCommunity = ({ reviews }) => {
             if (!response.ok) {
                 throw new Error(`Error: ${response.statusText}`);
             }
+
+            setLocalReplies(prevReplies => ({
+                ...prevReplies,
+                [id_review]: prevReplies[id_review].filter(reply => reply.id !== id_reply)
+            }));
 
             ///setLocalReviews(prevReviews => prevReviews.filter(review => review.id !== id_review));
         } catch (error) {
@@ -315,40 +322,37 @@ const ReviewCommunity = ({ reviews }) => {
                             {
                                 viewReply[review.id] === true ? (
                                     <div className='replies-area h-60 mt-2 ml-20 mb-4 border rounded-xl w-5/6 bg-primary-white border-primary-black overflow-auto'>
-                                        {
-                                            comments[review.id] ? comments[review.id]
+                                        {localReplies[review.id] ? localReplies[review.id]
                                             .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
                                             .map((reply_review, index) => (
-                                                    <div key={index} className='reply-review-area flex flex-col p-4 border-b border-primary-black'>
-                                                        <div className='flex justify-between'>
-                                                            <div className='flex'>
-                                                                <Avatar className='mr-2' sx={{ bgcolor: '#0077C0' }}>HP</Avatar>
-                                                                <div className='flex flex-col'>
-                                                                    <p className='text-xs font-semibold'>{reply_review.author}</p>
-                                                                    <p className='text-xs font-thin'>{new Date(reply_review.created_at).toISOString().slice(0, 16).replace('T', '  ')}</p>
-                                                                    
-                                                                </div>
-                                                            </div>
-                                                            <div>
-                                                                {
-                                                                    userId === reply_review.author ? 
-                                                                        <FontAwesomeIcon 
-                                                                        icon={faTrash} 
-                                                                        style={{ height: '15px', width: '20px', color:"red" }} 
-                                                                        className='cursor-pointer mr-2' 
-                                                                        onClick={() => handleDeleteReply(reply_review.id)}
-                                                                        /> : <div></div>
-                                                                }
+                                                <div key={index} className='reply-review-area flex flex-col p-4 border-b border-primary-black'>
+                                                    <div className='flex justify-between'>
+                                                        <div className='flex'>
+                                                            <Avatar className='mr-2' sx={{ bgcolor: '#0077C0' }}>HP</Avatar>
+                                                            <div className='flex flex-col'>
+                                                                <p className='text-xs font-semibold'>{reply_review.author}</p>
+                                                                <p className='text-xs font-thin'>{new Date(reply_review.created_at).toISOString().slice(0, 16).replace('T', '  ')}</p>
                                                             </div>
                                                         </div>
-
-                                                        <div className='text-sm mt-2 mb-2'>
-                                                            {reply_review.comment}
+                                                        <div>
+                                                            {userId === reply_review.author && (
+                                                                <FontAwesomeIcon 
+                                                                    icon={faTrash} 
+                                                                    style={{ height: '15px', width: '20px', color:"red" }} 
+                                                                    className='cursor-pointer mr-2' 
+                                                                    onClick={() => handleDeleteReply(reply_review.id, review.id)} // Adăugarea review.id aici
+                                                                />
+                                                            )}
                                                         </div>
-
                                                     </div>
-                                                )) : <div></div>
+
+                                                    <div className='text-sm mt-2 mb-2'>
+                                                        {reply_review.comment}
+                                                    </div>
+                                                </div>
+                                            )) : <div></div>
                                         }
+
                                     </div>
                                 ) : <div></div>
                             }

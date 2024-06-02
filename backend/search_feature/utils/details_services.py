@@ -78,7 +78,7 @@ def get_related_attractions(lat, lon):
         print(e)
 
 def get_description(location, city):
-    query = str(location) + ', ' +  city
+    query = str(location) + ', ' + city
     try:
         data = wikipedia.summary(query)
 

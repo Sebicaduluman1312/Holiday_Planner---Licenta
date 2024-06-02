@@ -225,7 +225,7 @@ class ReplyReviewView(APIView):
         if token is None:
             return Response({'message': 'User not logged in!'}, HTTP_401_UNAUTHORIZED)
         try:
-            id_review = request.data['id']
+            id_review = request.query_params['id']
             replies = ReplyReview.objects.filter(review=id_review)
             serializer = ReplyReviewSerializer(replies, many=True)
 

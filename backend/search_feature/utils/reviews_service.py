@@ -19,7 +19,7 @@ def get_review_details_api(id_review, review_object):
 
 def get_api_reviews(fsq_id, reviews):
     try:
-        url = f"https://api.foursquare.com/v3/places/{fsq_id}/tips?limit=30"
+        url = f"https://api.foursquare.com/v3/places/{fsq_id}/tips?limit=2"
 
         headers = {
             "accept": "application/json",

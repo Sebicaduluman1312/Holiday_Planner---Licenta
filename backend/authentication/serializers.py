@@ -17,3 +17,11 @@ class UserSerializer(serializers.ModelSerializer):
             instance_of_model.set_password(password)
         instance_of_model.save()
         return instance_of_model
+
+class UserDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'name', 'email', 'password']
+        extra_kwargs = {                     # optiuni suplimentare pentru filed-uri
+            'password': {'write_only': True} # permite doar scrierea, adica nu vom transmite si parola mai departe
+        }

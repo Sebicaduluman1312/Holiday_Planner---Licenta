@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faThumbsDown, faComment, faReply, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsUp as RegTU, faThumbsDown as RegTD, faComment as RegC} from '@fortawesome/free-regular-svg-icons';
 import { useState, useEffect } from 'react';
+import {GetUserDetails} from '../../../../utils/userDetails';
 
 const CustomRating = styled(Rating)({
     '& .MuiRating-iconFilled': {
@@ -26,7 +27,29 @@ const ReviewCommunity = ({ reviews }) => {
     const [localReviews, setLocalReviews] = useState([]);
     const [localReplies, setLocalReplies] = useState({});
 
+    /// ---> adding additional details for author
+    const [authorReview, setAuthorReview] = useState({});
 
+    useEffect(() => {
+        const fetchUserDetailsForReviews = async () => {
+            const userDetailsPromises = reviews.map(async (review) => {
+                const userDetails = await GetUserDetails(review.author);
+                
+                if ( !(review.id in authorReview) ){
+                    setAuthorReview(prevObject => ({
+                        ...prevObject,
+                        [review.id]: userDetails.name
+                    }));
+                }
+
+            });
+        };
+
+        fetchUserDetailsForReviews();
+    }, [reviews, authorReview]);
+
+
+    /// ---> get actual user
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
@@ -120,7 +143,6 @@ const ReviewCommunity = ({ reviews }) => {
     /// -----> view replies
 
     const [viewReply, setViewReply] = useState({});
-    const [comments, setComments] = useState({});
     
     const handleViewReply = async (id_review) => {
         if(id_review in viewReply){
@@ -271,7 +293,10 @@ const ReviewCommunity = ({ reviews }) => {
 
                                     <div className='flex flex-col'>
                                         <div>
-                                            {userName ? userName : <p>Forsquare user</p>}
+                                            {
+                                                authorReview[review.id] ? authorReview[review.id] : <p></p> 
+
+                                            }
                                         </div>
                                         <div className='text-xs font-thin'>
                                             {review.created_at ? (

@@ -1,9 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_409_CONFLICT, HTTP_401_UNAUTHORIZED
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserDetailsSerializer
 from .models import User
 
+from rest_framework.status import HTTP_409_CONFLICT, HTTP_401_UNAUTHORIZED
 from user_profile.serializers import UserProfileSerializer
 import jwt, datetime
 
@@ -93,3 +94,20 @@ class LogOutView(APIView):
         }
 
         return response
+
+class GetUserDetailsView(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if token is None:
+            return Response({'message': 'User not logged in!'}, HTTP_401_UNAUTHORIZED)
+        try:
+            id_user = request.query_params['id']
+            user_data = User.objects.filter(id=id_user).first()
+            user_details_serializer = UserDetailsSerializer(user_data)
+
+            return Response({'data': user_details_serializer.data})
+
+        except Exception as e:
+            return Response({'message': f'Error in getting user details: {e}'},
+                            HTTP_409_CONFLICT)

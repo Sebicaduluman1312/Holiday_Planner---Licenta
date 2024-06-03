@@ -3,7 +3,7 @@ import Rating from '@mui/material/Rating';
 
 import { useState, useEffect } from "react";
 
-const CreateReview = ({id_location}) => {
+const CreateReview = ({id_location, handleReviewSubmitted}) => {
 
     const [rating, setRating] = useState(null);
     const [comment, setComment] = useState('');
@@ -40,6 +40,7 @@ const CreateReview = ({id_location}) => {
             }
 
             const data = await response.json();
+            handleReviewSubmitted();
 
         } catch (error) {
             console.error(error);

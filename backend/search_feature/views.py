@@ -170,6 +170,7 @@ class ReviewDestination(APIView):
 
             review = Review.objects.get(id=id_review, author=id_user)
             review.comment = request.data['new_comment']
+            review.rating = request.data['rating']
             review.save()
 
             return Response({'message': 'Updated review'})

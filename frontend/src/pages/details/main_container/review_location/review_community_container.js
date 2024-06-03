@@ -19,16 +19,18 @@ const CustomRating = styled(Rating)({
     },
 });
 
-const ReviewCommunity = ({ reviews }) => {
+const ReviewCommunity = ({ reviews, reload }) => {
     const [userName, setUserName] = useState(null);
     const [userId, setUserId] = useState(null);
     const [editingReview, setEditingReview] = useState(null);
     const [editedComment, setEditedComment] = useState("");
     const [localReviews, setLocalReviews] = useState([]);
     const [localReplies, setLocalReplies] = useState({});
+    const [editRating, setEditRating] = useState(0);
 
     /// ---> adding additional details for author
     const [authorReview, setAuthorReview] = useState({});
+    const [authorReply, setAuthorReply] = useState({});
 
     useEffect(() => {
         const fetchUserDetailsForReviews = async () => {
@@ -78,7 +80,7 @@ const ReviewCommunity = ({ reviews }) => {
 
     useEffect(() => {
         setLocalReviews(reviews);
-    }, [reviews]);
+    }, [reviews, reload]);
 
 
     /// ---> delete review
@@ -110,11 +112,17 @@ const ReviewCommunity = ({ reviews }) => {
         setEditedComment(comment);
     }
 
+    const handleEditRating = (event, newValue) => {
+        setEditRating(newValue);
+    };
+
     const handleSaveEdit = async (id_review) => {
         const updatedReview = {
             id: id_review,
-            new_comment: editedComment
+            new_comment: editedComment,
+            rating: editRating,
         };
+
         try {
             const response = await fetch(`http://localhost:8000/api/search/reviews/`, {
                 method: 'PUT',
@@ -172,7 +180,19 @@ const ReviewCommunity = ({ reviews }) => {
                         throw new Error(`Error: ${response.statusText}`);
                     }
     
-                    const data = await response.json();
+                    let data = await response.json();
+
+                    await Promise.all(data.data.map(async (rep) => {
+                        const data_user_reply = await GetUserDetails(rep.author);
+                        data['username'] = data_user_reply.name;
+                    
+                        if (!(rep.id in authorReply)) {
+                            setAuthorReply(prevObject => ({
+                                ...prevObject,
+                                [rep.id]: data_user_reply.name
+                            }));
+                        }
+                    }));
 
                     setLocalReplies(prevObject => ({
                         ...prevObject,
@@ -271,7 +291,6 @@ const ReviewCommunity = ({ reviews }) => {
                 [id_review]: prevReplies[id_review].filter(reply => reply.id !== id_reply)
             }));
 
-            ///setLocalReviews(prevReviews => prevReviews.filter(review => review.id !== id_review));
         } catch (error) {
             console.error(error);
         } 
@@ -309,7 +328,13 @@ const ReviewCommunity = ({ reviews }) => {
                                         </div>
                                     </div>
                                 </div>
-                                <CustomRating name="half-rating-read" defaultValue={review.rating} precision={0.5} className='text-primary-black' readOnly />
+
+                                {editingReview === review.id ? (
+                                    <CustomRating name="half-rating-read" onChange={handleEditRating} defaultValue={review.rating} precision={0.5} className='text-primary-black'/>
+
+                                ) : (
+                                    <CustomRating name="half-rating-read" defaultValue={review.rating} precision={0.5} className='text-primary-black' readOnly />
+                                )}
                             </div>
 
                             <div className="content text-sm mt-2 ml-4">
@@ -355,7 +380,11 @@ const ReviewCommunity = ({ reviews }) => {
                                                         <div className='flex'>
                                                             <Avatar className='mr-2' sx={{ bgcolor: '#0077C0' }}>HP</Avatar>
                                                             <div className='flex flex-col'>
-                                                                <p className='text-xs font-semibold'>{reply_review.author}</p>
+                                                                <p className='text-xs font-semibold'>
+                                                                    {
+                                                                        authorReply[reply_review.id] ? authorReply[reply_review.id] : 'Hp user'
+                                                                    }
+                                                                </p>
                                                                 <p className='text-xs font-thin'>{new Date(reply_review.created_at).toISOString().slice(0, 16).replace('T', '  ')}</p>
                                                             </div>
                                                         </div>

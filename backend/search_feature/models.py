@@ -67,6 +67,15 @@ class Review(models.Model):
     def __str__(self):
         return f'Review by {self.author.username} for destination {self.destination_id}'
 
+
+class LikeReview(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    review_id = models.ForeignKey(Review, on_delete=models.CASCADE)
+
+class DislikeReview(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    review_id = models.ForeignKey(Review, on_delete=models.CASCADE)
+
 class ReplyReview(models.Model):
     review = models.ForeignKey(Review, related_name='replies', on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)

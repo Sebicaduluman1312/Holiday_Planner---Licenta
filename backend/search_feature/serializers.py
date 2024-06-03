@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Hotel, Restaurant, PopularDestinations, Searches, Review, ReplyReview
+from .models import Hotel, Restaurant, PopularDestinations, Searches, Review, ReplyReview, LikeReview, DislikeReview
 
 
 class HotelSerializer(serializers.ModelSerializer):
@@ -38,5 +38,13 @@ class ReplyReviewSerializer(serializers.ModelSerializer):
         model = ReplyReview
         fields = '__all__'
 
+class LikeReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LikeReview
+        fields = '__all__'
 
 
+class DislikeReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DislikeReview
+        fields = '__all__'

@@ -3,8 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_409_CONFLICT, HTTP_401_UNAUTHORIZED, HTTP_201_CREATED, HTTP_200_OK, HTTP_404_NOT_FOUND
 
-from .models import Hotel, PopularDestinations, Searches, Review, ReplyReview
-from .serializers import HotelSerializer, PopularDestinationsSerializer, SearchesSerializer, ReviewSerializer, ReplyReviewSerializer, ReviewSerializerWithoutAuthor
+from .models import Hotel, PopularDestinations, Searches, Review, ReplyReview, LikeReview, DislikeReview
+from .serializers import HotelSerializer, PopularDestinationsSerializer, SearchesSerializer, ReviewSerializer, ReplyReviewSerializer, ReviewSerializerWithoutAuthor, LikeReviewSerializer, DislikeReviewSerializer
 from django.db.models import Count
 
 from .utils.autocomplete_service import get_autocomplete_destination
@@ -273,6 +273,50 @@ class ReplyReviewView(APIView):
             return Response({'message': 'Reply not found'}, HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'message': f'Internal error in UPDATING replies for review! Error: {e}'}, HTTP_409_CONFLICT)
+
+class LikeReviewView(APIView):
+    def post(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if token is None:
+            return Response({'message': 'User not logged in!'}, HTTP_401_UNAUTHORIZED)
+        try:
+            id_review = request.data['review_id']
+            id_user = get_id_user(token)
+
+            data_like = {}
+            data_like['review_id'] = id_review
+            data_like['user'] = id_user
+
+            serializer_like = LikeReviewSerializer(data=data_like)
+            if serializer_like.is_valid():
+                serializer_like.save()
+
+            number_of_likes = LikeReview.objects.filter(review_id=id_review).count()
+            review = Review.objects.get(id=id_review)
+            review.likes = number_of_likes
+            review.save()
+
+            return Response({'message': f"Succes like review: {number_of_likes}"}, HTTP_200_OK)
+
+
+        except Exception as e:
+            return Response({'message': f'Internal error in like review! Error: {e}'}, HTTP_409_CONFLICT)
+
+
+class DislikeReviewView(APIView):
+    def post(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if token is None:
+            return Response({'message': 'User not logged in!'}, HTTP_401_UNAUTHORIZED)
+        try:
+
+
+
+        except Exception as e:
+            return Response({'message': f'Internal error in dislike review! Error: {e}'}, HTTP_409_CONFLICT)
+
 
 class DescriptionAttraction(APIView):
     def post(self, request):

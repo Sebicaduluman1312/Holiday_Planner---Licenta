@@ -84,12 +84,14 @@ def get_related_attractions(lat, lon):
 def get_description(location, city):
     query = str(location) + ', ' + city
     try:
-        data = wikipedia.summary(query)
+        page = wikipedia.page(query, auto_suggest=False)
+        data = page.content
 
-    except wikipedia.PageError:
+    except wikipedia.exceptions.PageError:
         try:
-            data = wikipedia.summary(city)
-        except wikipedia.PageError:
-            data = "There is not description about this location, sorry..."
+            page = wikipedia.page(city, auto_suggest=False)
+            data = page.content
+        except wikipedia.exceptions.PageError:
+            data = "There is no description available for this location, sorry..."
 
-    return data;
+    return data

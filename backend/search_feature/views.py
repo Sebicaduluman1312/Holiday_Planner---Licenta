@@ -1,4 +1,6 @@
 import jwt, copy
+from functools import reduce
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_409_CONFLICT, HTTP_401_UNAUTHORIZED, HTTP_201_CREATED, HTTP_200_OK, HTTP_404_NOT_FOUND
@@ -50,9 +52,16 @@ class SearchLocations(APIView):
         try:
             query_params = request.query_params
 
+            categories = query_params['category'].split(',')
+            print(categories)
             # From API
-            api_locations = get_locations_from_API(query_params['category'], query_params['location'], query_params['sort'])
-            formated_api_locations = add_photo_to_location(format_locations_reponse(api_locations))
+            api_response = []
+            for category in categories:
+                api_locations = get_locations_from_API(category, query_params['location'], query_params['sort'])
+                formated_api_locations = add_photo_to_location(format_locations_reponse(api_locations))
+                api_response.append(formated_api_locations)
+
+            api_response = reduce(lambda x, y: x + y, api_response)
 
             # From Database
             database_locations = get_locations_from_database(query_params['category'], query_params['location'])
@@ -62,8 +71,9 @@ class SearchLocations(APIView):
             else:
                 formated_database_locations = []
 
-            return Response({'database_locations': formated_database_locations, 'api_locations': formated_api_locations}, HTTP_200_OK)
+            return Response({'database_locations': formated_database_locations, 'api_locations': api_response}, HTTP_200_OK)
         except Exception as e:
+            print(e)
             return Response({'message': f'Internal problem searching locations: {e}'}, HTTP_409_CONFLICT)
 
 class SearchLocationCounter(APIView):

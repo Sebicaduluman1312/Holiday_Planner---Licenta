@@ -22,6 +22,8 @@ def get_locations_from_API(category, near, sort):
     url = ''
     if category == 'all':
         url = f"https://api.foursquare.com/v3/places/search?near={near}&sort=POPULARITY&limit=30"
+    elif category.isnumeric():
+        url = f"https://api.foursquare.com/v3/places/search?categories={category}&near={near}&sort={sort}&limit=30"
     else:
         url = f"https://api.foursquare.com/v3/places/search?categories={api_category_id[category]}&near={near}&sort={sort}&limit=30"
 

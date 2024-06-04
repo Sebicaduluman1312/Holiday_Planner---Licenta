@@ -192,8 +192,20 @@ const FilterComponent = () => {
             ...sportSelectedIds,
             ...travelSelectedIds
         ];
-        console.log(selectedIds);
-        console.log(selectedValue);
+        const queryString = window.location.search;
+        const params = new URLSearchParams(queryString);
+
+        const paramsObject = {};
+        params.forEach((value, key) => {
+            paramsObject[key] = value.trim();
+        });
+        
+        const filters = selectedIds.join(',');
+
+        ///href la siteul cu filtre
+        const url = `http://localhost:3000/search?category=${filters}&location=${paramsObject['location']}&sort=${selectedValue}`;
+        window.location.href = url;
+
     };
 
 

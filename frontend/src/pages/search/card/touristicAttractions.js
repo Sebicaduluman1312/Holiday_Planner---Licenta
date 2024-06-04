@@ -83,7 +83,7 @@ const TouristicAttractions = () => {
                                 
                 }
             </div>
-            <Stack spacing={2}>
+            <Stack spacing={2} className="mb-6">
                 <Pagination count={pagination.length} defaultPage={1} onChange={handlePages} />
             </Stack>
         </div>

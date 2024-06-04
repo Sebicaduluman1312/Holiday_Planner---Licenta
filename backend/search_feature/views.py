@@ -1,4 +1,6 @@
 import jwt, copy
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 from functools import reduce
 
 from rest_framework.views import APIView
@@ -53,13 +55,31 @@ class SearchLocations(APIView):
             query_params = request.query_params
 
             categories = query_params['category'].split(',')
-            print(categories)
+
             # From API
             api_response = []
-            for category in categories:
-                api_locations = get_locations_from_API(category, query_params['location'], query_params['sort'])
-                formated_api_locations = add_photo_to_location(format_locations_reponse(api_locations))
-                api_response.append(formated_api_locations)
+
+            with ThreadPoolExecutor() as executor:
+                futures = {
+                    executor.submit(get_locations_from_API, category, query_params['location'],
+                                    query_params['sort']): category
+                    for category in categories
+                }
+
+                for category in categories:
+                    print(f"Starting API call for category: {category}")
+
+                for future in as_completed(futures):
+                    category = futures[future]
+                    try:
+                        api_locations = future.result()
+                        formatted_api_locations = add_photo_to_location(format_locations_reponse(api_locations))
+                        api_response.append(formatted_api_locations)
+                    except Exception as e:
+                        print(f"Error processing category {category}: {e}")
+
+                for category in categories:
+                    print(f"Finished API call for category: {category}")
 
             api_response = reduce(lambda x, y: x + y, api_response)
 

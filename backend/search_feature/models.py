@@ -71,10 +71,15 @@ class Review(models.Model):
 class LikeReview(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     review_id = models.ForeignKey(Review, on_delete=models.CASCADE)
+    class Meta:
+        unique_together = ('user', 'review_id')
+
 
 class DislikeReview(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     review_id = models.ForeignKey(Review, on_delete=models.CASCADE)
+    class Meta:
+        unique_together = ('user', 'review_id')
 
 class ReplyReview(models.Model):
     review = models.ForeignKey(Review, related_name='replies', on_delete=models.CASCADE)

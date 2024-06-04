@@ -17,7 +17,7 @@ const RecomendedCard = (props) => {
                 </div>
                 <p className="text-sm font-normal text-primary-gray pl-2 pb-2 pr-2">{props.details.destination_category}</p>
             </div>
-            <Rating name="half-rating-read" defaultValue={4.5} precision={0.5} readOnly className='pl-2 pr-2'/>
+            <Rating name="half-rating-read" defaultValue={props.details.rating/2} precision={0.5} readOnly className='pl-2 pr-2'/>
         </div>
     );
 }

@@ -71,6 +71,10 @@ def get_related_attractions(lat, lon):
 
         response = requests.get(url, headers=headers).json()
         related = add_photo_to_location(format_locations_reponse(response))
+        for rel in related:
+            rating = {}
+            get_destination_rating(rel['fsq_id'], rating)
+            rel['rating'] = rating['rating']
 
         return related
 

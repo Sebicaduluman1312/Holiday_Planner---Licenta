@@ -292,13 +292,35 @@ class LikeReviewView(APIView):
             if serializer_like.is_valid():
                 serializer_like.save()
 
+            # dislike if like
+            object_dislike = DislikeReview.objects.filter(review_id=id_review, user=id_user).first()
+            if object_dislike:
+                object_dislike.delete()
+
             number_of_likes = LikeReview.objects.filter(review_id=id_review).count()
             review = Review.objects.get(id=id_review)
             review.likes = number_of_likes
+            if object_dislike:
+                review.dislikes -= 1
             review.save()
+            number_of_dislikes = review.dislikes
 
-            return Response({'message': f"Succes like review: {number_of_likes}"}, HTTP_200_OK)
+            return Response({'data': {'dislikes': number_of_dislikes, 'likes': number_of_likes}}, HTTP_200_OK)
 
+        except Exception as e:
+            return Response({'message': f'Internal error in like review! Error: {e}'}, HTTP_409_CONFLICT)
+
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if token is None:
+            return Response({'message': 'User not logged in!'}, HTTP_401_UNAUTHORIZED)
+        try:
+            id_review = request.query_params['id']
+            review_likes = LikeReview.objects.filter(review_id=id_review)
+            review_likes_serializer = LikeReviewSerializer(review_likes, many=True)
+
+            return Response({'data': review_likes_serializer.data})
 
         except Exception as e:
             return Response({'message': f'Internal error in like review! Error: {e}'}, HTTP_409_CONFLICT)
@@ -311,11 +333,48 @@ class DislikeReviewView(APIView):
         if token is None:
             return Response({'message': 'User not logged in!'}, HTTP_401_UNAUTHORIZED)
         try:
+            id_review = request.data['review_id']
+            id_user = get_id_user(token)
 
+            data_dislike = {}
+            data_dislike['review_id'] = id_review
+            data_dislike['user'] = id_user
 
+            serializer_dislike = DislikeReviewSerializer(data=data_dislike)
+            if serializer_dislike.is_valid():
+                serializer_dislike.save()
+
+            # like if dislike
+            object_like = LikeReview.objects.filter(review_id=id_review, user=id_user).first()
+            if object_like:
+                object_like.delete()
+
+            number_of_dislikes = DislikeReview.objects.filter(review_id=id_review).count()
+            review = Review.objects.get(id=id_review)
+            review.dislikes = number_of_dislikes
+            if object_like:
+                review.likes -= 1
+            review.save()
+            number_of_likes = review.likes
+
+            return Response({'data': {'dislikes': number_of_dislikes, 'likes': number_of_likes}}, HTTP_200_OK)
 
         except Exception as e:
             return Response({'message': f'Internal error in dislike review! Error: {e}'}, HTTP_409_CONFLICT)
+
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if token is None:
+            return Response({'message': 'User not logged in!'}, HTTP_401_UNAUTHORIZED)
+        try:
+            id_review = request.query_params['id']
+            review_dislikes = DislikeReview.objects.filter(review_id=id_review)
+            review_dislikes_serializer = DislikeReviewSerializer(review_dislikes, many=True)
+
+            return Response({'data': review_dislikes_serializer.data}, HTTP_200_OK)
+        except Exception as e:
+            return Response({'message': f'Internal error in like review! Error: {e}'}, HTTP_409_CONFLICT)
 
 
 class DescriptionAttraction(APIView):

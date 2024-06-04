@@ -6,6 +6,8 @@ import { faThumbsUp, faThumbsDown, faComment, faReply, faTrash, faEdit } from '@
 import { faThumbsUp as RegTU, faThumbsDown as RegTD, faComment as RegC} from '@fortawesome/free-regular-svg-icons';
 import { useState, useEffect } from 'react';
 import {GetUserDetails} from '../../../../utils/userDetails';
+import LikeReview from './likeReview';
+import DislikeReview from './dislikeReview';
 
 const CustomRating = styled(Rating)({
     '& .MuiRating-iconFilled': {
@@ -295,7 +297,7 @@ const ReviewCommunity = ({ reviews, reload }) => {
             console.error(error);
         } 
     };
-        
+    
 
     return ( 
         <div className="h-96 w-full bg-primary-white rounded-2xl mt-4 p-4 shadow-xl overflow-auto border border-primary-black">
@@ -412,15 +414,8 @@ const ReviewCommunity = ({ reviews, reload }) => {
                             }
                             
                             <div className='flex w-full justify-between'>
-                                <div className='flex ml-10 mt-2 items-center'>
-                                    <div className='like flex items-center cursor-pointer'>
-                                        <FontAwesomeIcon icon={RegTU} style={{ height: '15px', width: '20px' }} />
-                                        <p>{review.likes}</p>
-                                    </div>
-                                    <div className='dislike flex items-center ml-4 cursor-pointer'>
-                                        <FontAwesomeIcon icon={RegTD} style={{ height: '15px', width: '20px' }} />
-                                        <p>{review.dislikes}</p>
-                                    </div>
+                                <div className={`status-${review.id} flex ml-10 mt-2 items-center`}>
+                                    <LikeReview review={review} id_user={userId} />
 
                                     <div className='replies flex items-center ml-4 cursor-pointer' onClick={() => handleViewReply(review.id)}>
                                         <FontAwesomeIcon icon={RegC} style={{ height: '15px', width: '20px' }} />

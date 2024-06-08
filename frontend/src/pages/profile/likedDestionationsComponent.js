@@ -39,9 +39,9 @@ const LikedDestinationsComponent = () => {
     }, []);
     
     return ( 
-        <div className="destinations p-20 grid-cols-3 gap-4 bg-primary-white-blue rounded-tl-xl">
+        <div className="destinations p-10 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-primary-white-blue rounded-xl justify-items-center">
             {destinations.map((destination, index) => (
-                <Card sx={{ maxWidth: 280 }} id={destination.fsq_id} key={index}>
+                <Card sx={{ width: 280 }} id={destination.fsq_id} key={index}>
                     <CardMedia
                         sx={{ height: 180, objectFit: 'cover' }}
                         image={destination.photo_url}

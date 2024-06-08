@@ -42,36 +42,9 @@ const ExtraInfo = (props) => {
 
 
     return (
-        <div className="w-screen flex">
-            <div className="extra-infos w-2/6 flex flex-col items-left justify-start bg-primary-gray gap-4 pl-16 pr-16 rounded-tr-xl">
-                <div className="flex items-center justify-between mt-4">
-                    <div className="font-semibold">
-                        <FontAwesomeIcon icon={faUsers} className='text-primary-black mr-2'/>
-                        Followers 0
-                    </div>
-                    <div className="font-semibold">
-                        <FontAwesomeIcon icon={faUserPlus} className='text-primary-black mr-2'/>
-                        Following 0
-                    </div>
-                </div>
-                <div className="text-sm">
-                    <FontAwesomeIcon icon={faEnvelope} className='text-primary-black mr-2'/>
-                    {props.email}
-                </div>
-                <div className="text-sm mb-4">
-                    <FontAwesomeIcon icon={faPhone} className='text-primary-black mr-2'/>
-                    {props.phone}
-                </div>
-
-                {
-                    destinationsSection ? 
-                        <div>Filter your destinations</div> : <div></div>
-
-                }
-
-            </div>
-            <div className="category-section w-4/6 flex flex-col">
-                <div className="h-10 bg-primary-white flex place-items-center justify-evenly">
+        <div className="w-screen flex flex-col items-center bg-primary-white">
+            <div className="category-section w-5/6 flex flex-col">
+                <div className="h-10 bg-primary-white flex place-items-center justify-evenly mb-4">
                     <div className='hover:bg-primary-gray p-2 rounded-xl cursor-pointer' onClick={handleUserPlans}>
                         <FontAwesomeIcon icon={faEnvelope} className='text-primary-black mr-2'/>
                         My plans

@@ -35,17 +35,45 @@ const ChangePhotoComponent = () => {
                 throw error;
             }
 
-            const { publicURL, error: urlError } = supabase
-                .storage
+            const { data: publicURLData, error: urlError } = await supabase.storage
                 .from('Avatars')
                 .getPublicUrl(filePath);
 
             if (urlError) {
                 throw urlError;
+            } else {
+                console.log(publicURLData.publicUrl);
+                setFileURL(publicURLData.publicUrl);
+                /// aici facem fetch sa punem in baza de date a noastra
+                const updateProfile = async () => {
+                    const url = 'http://localhost:8000/api/user/profile/';
+                    const photo = {profile_image : publicURLData.publicUrl};
+                    let data = { 'data' : photo};
+                    
+                    try {
+                        const response = await fetch(url, {
+                        method: 'PUT',
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                        });
+                    
+                        if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                        }
+                    
+                        const responseData = await response.json();
+                        console.log('PUT request successful', responseData);
+        
+                    } catch (error) {
+                        console.error('Problem with PUT request ', error);
+                    }
+                }
+                updateProfile();
             }
 
-            console.log(publicURL);
-            setFileURL(publicURL);
 
         } catch (error) {
             alert("Error uploading file: " + error.message);
@@ -65,12 +93,12 @@ const ChangePhotoComponent = () => {
                     onChange={handleFileChange}
                     accept="image/*"
                     className="mb-2"
-                    style={{ cursor: 'pointer' }} // Adăugare stil pentru a seta cursorul
+                    style={{ cursor: 'pointer' }}
                 />
                 <button
                     onClick={handleUpload}
                     disabled={uploading}
-                    className="btn btn-primary"
+                    className="bg-primary-black-blue text-primary-white p-2 rounded-xl pl-6 pr-6 mt-6 hover:bg-primary-black"
                 >
                     {uploading ? 'Uploading...' : 'Upload'}
                 </button>

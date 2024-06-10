@@ -37,6 +37,10 @@ const LikedDestinationsComponent = () => {
 
         fetchLikedDestinations();
     }, []);
+
+    const handleDetailsClick = (id_location) => {
+        window.location.href = `http://localhost:3000/details?location=${id_location}`;
+    };
     
     return ( 
         <div className="destinations p-10 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-primary-white-blue rounded-xl justify-items-center">
@@ -63,7 +67,7 @@ const LikedDestinationsComponent = () => {
 
                     </CardContent>
                     <CardActions>
-                        <Button size="small">Details</Button>
+                        <Button size="small" onClick={() => handleDetailsClick(destination.fsq_id)}>Details</Button>
                     </CardActions>
                 </Card>
             ))}

@@ -39,10 +39,12 @@ const ReviewCommunity = ({ reviews, reload }) => {
             const userDetailsPromises = reviews.map(async (review) => {
                 const userDetails = await GetUserDetails(review.author);
                 
+
                 if ( !(review.id in authorReview) ){
                     setAuthorReview(prevObject => ({
                         ...prevObject,
-                        [review.id]: userDetails.name
+                        [review.id]: userDetails.data.name,
+                        [`${review.id}-photo`]: userDetails.profile.profile_image,
                     }));
                 }
 
@@ -186,12 +188,14 @@ const ReviewCommunity = ({ reviews, reload }) => {
 
                     await Promise.all(data.data.map(async (rep) => {
                         const data_user_reply = await GetUserDetails(rep.author);
-                        data['username'] = data_user_reply.name;
-                    
+                        data['username'] = data_user_reply.data.name;
+                        
+
                         if (!(rep.id in authorReply)) {
                             setAuthorReply(prevObject => ({
                                 ...prevObject,
-                                [rep.id]: data_user_reply.name
+                                [rep.id]: data_user_reply.data.name,
+                                [`${rep.id}-photo`]: data_user_reply.profile.profile_image,
                             }));
                         }
                     }));
@@ -297,7 +301,12 @@ const ReviewCommunity = ({ reviews, reload }) => {
             console.error(error);
         } 
     };
+
+    /// redirect to user profile
     
+    const handleVisitProfile = (id_user) => {
+        window.location.href = `http://localhost:3000/profile?visit=${id_user}`;
+    }
 
     return ( 
         <div className="h-96 w-full bg-primary-white rounded-2xl mt-4 p-4 shadow-xl overflow-auto border border-primary-black">
@@ -310,13 +319,17 @@ const ReviewCommunity = ({ reviews, reload }) => {
                            
                             <div className="flex items-center w-full justify-between">
                                 <div className="font-semibold ml-2 flex items-center">
-                                    <Avatar className='mr-2' sx={{ bgcolor: '#0077C0' }}>HP</Avatar>
+                                    {
+                                        authorReview[`${review.id}-photo`] ? 
+                                        <Avatar className='mr-2' sx={{ bgcolor: '#0077C0' }} src={authorReview[`${review.id}-photo`]}>HP</Avatar>: 
+                                        <Avatar className='mr-2' sx={{ bgcolor: '#0077C0' }}>HP</Avatar>
+
+                                    }
 
                                     <div className='flex flex-col'>
                                         <div>
                                             {
-                                                authorReview[review.id] ? authorReview[review.id] : <p></p> 
-
+                                                authorReview[review.id] ? <span className="cursor-pointer" onClick={() => handleVisitProfile(review.author)}>{authorReview[review.id]}</span> : <p></p> 
                                             }
                                         </div>
                                         <div className='text-xs font-thin'>
@@ -380,11 +393,18 @@ const ReviewCommunity = ({ reviews, reload }) => {
                                                 <div key={index} className='reply-review-area flex flex-col p-4 border-b border-primary-black'>
                                                     <div className='flex justify-between'>
                                                         <div className='flex'>
-                                                            <Avatar className='mr-2' sx={{ bgcolor: '#0077C0' }}>HP</Avatar>
+                                                            {
+                                                                authorReply[reply_review.id] ? 
+                                                                <Avatar className='mr-2' sx={{ bgcolor: '#0077C0' }} src={authorReply[`${reply_review.id}-photo`]}></Avatar>
+                                                                : 
+                                                                <Avatar className='mr-2' sx={{ bgcolor: '#0077C0' }}></Avatar>
+
+                                                            }
+                                                            
                                                             <div className='flex flex-col'>
                                                                 <p className='text-xs font-semibold'>
                                                                     {
-                                                                        authorReply[reply_review.id] ? authorReply[reply_review.id] : 'Hp user'
+                                                                        authorReply[reply_review.id] ? <span className='cursor-pointer' onClick={() => handleVisitProfile(reply_review.author)}>{authorReply[reply_review.id]}</span> : 'Hp user'
                                                                     }
                                                                 </p>
                                                                 <p className='text-xs font-thin'>{new Date(reply_review.created_at).toISOString().slice(0, 16).replace('T', '  ')}</p>

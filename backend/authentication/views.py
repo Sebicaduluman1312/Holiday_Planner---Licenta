@@ -6,6 +6,7 @@ from .models import User
 
 from rest_framework.status import HTTP_409_CONFLICT, HTTP_401_UNAUTHORIZED
 from user_profile.serializers import UserProfileSerializer
+from user_profile.models import UserProfile
 import jwt, datetime
 
 
@@ -106,7 +107,10 @@ class GetUserDetailsView(APIView):
             user_data = User.objects.filter(id=id_user).first()
             user_details_serializer = UserDetailsSerializer(user_data)
 
-            return Response({'data': user_details_serializer.data})
+            user_profile = UserProfile.objects.filter(user_id=id_user).first()
+            user_profile_serializer = UserProfileSerializer(user_profile)
+
+            return Response({'data': user_details_serializer.data, 'profile': user_profile_serializer.data})
 
         except Exception as e:
             return Response({'message': f'Error in getting user details: {e}'},

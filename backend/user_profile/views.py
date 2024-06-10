@@ -15,7 +15,11 @@ class UserProfileView(APIView):
 
         try:
             user_data = jwt.decode(token, 'secret', algorithms=['HS256'])
-            id_user = user_data['id']
+
+            if 'visit' in request.query_params:
+                id_user = request.query_params['visit']
+            else:
+                id_user = user_data['id']
 
             data_profile = UserProfile.objects.filter(user_id=id_user).first()
             serializer_data = UserProfileSerializer(data_profile)

@@ -13,7 +13,7 @@ export const GetUserDetails = async (id_user) => {
         }
 
         const data = await response.json();
-        return data.data;
+        return data;
     } catch (error) {
         console.error(error);
         return null;

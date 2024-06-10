@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPen, faLocationArrow } from '@fortawesome/free-solid-svg-icons'
+import { faPen, faLocationArrow, faPhone, faUserPlus, faUsers} from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react';
 
 import Modal from '@mui/material/Modal';
@@ -41,16 +41,30 @@ const DetailComponent = (props) => {
 
     return ( 
         <div className="details flex flex-col ml-20 mb-12 gap-1">
-            <div className="flex items-center justify-center">
-                <p className="text-2xl font-semibold">{props.props.name}</p>
-                <button className='bg-primary-black flex items-center justify-center ml-6 p-2 rounded-full  hover:bg-primary-black-blue' onClick={handleOpen}>
-                    <FontAwesomeIcon icon={faPen} className='text-primary-white'/>
-                </button>
+            <div className="flex flex-col mt-10">
+                <div className='flex'>
+                    <div className='flex'>
+                        <FontAwesomeIcon icon={faUsers} className='text-primary-gray mt-1 mr-2'/>
+                        <p className='font-semibold'>Followers 0</p>
+                    </div>
+                    <div className='ml-10 flex'>
+                        <FontAwesomeIcon icon={faUserPlus} className='text-primary-gray mt-1 mr-2'/>
+                        <p className='font-semibold'>Following 0</p>
+                    </div>
+                </div>
+                <div className='flex mt-4'>
+                    <p className="text-2xl font-semibold">{props.props.name}</p>
+                    <button className='bg-primary-black flex items-center justify-center ml-6 p-2 rounded-full  hover:bg-primary-black-blue' onClick={handleOpen}>
+                        <FontAwesomeIcon icon={faPen} className='text-primary-white'/>
+                    </button>
+                </div>
             </div>
-            <p className="text-sm text-primary-black">{props.props.status}</p>
+            <p className="text-sm text-primary-black mt-2">{props.props.status}</p>
             <p className="text-sm text-primary-black">
-                <FontAwesomeIcon icon={faLocationArrow} className='text-primary-gray mr-1'/>
+                <FontAwesomeIcon icon={faLocationArrow} className='text-primary-gray mr-2'/>
                 {props.props.city}, {props.props.country}
+                <FontAwesomeIcon icon={faPhone} className='text-primary-gray ml-10 mt-1 mr-2'/>
+                {props.props.phone}
             </p>
 
             <Modal keepMounted  open={open} onClose={handleClose}>

@@ -3,7 +3,7 @@ import { faThumbsUp, faThumbsDown, faComment, faReply, faTrash, faEdit } from '@
 import { faThumbsUp as RegTU, faThumbsDown as RegTD, faComment as RegC} from '@fortawesome/free-regular-svg-icons';
 import { useEffect, useState } from 'react';
 
-const LikeReview = ({review, id_user}) => {
+const LikeReview = ({review, id_user, reload}) => {
 
     const [likes, setLikes] = useState(review.likes);
     const [dislikes, setDislikes] = useState(review.dislikes);
@@ -13,6 +13,7 @@ const LikeReview = ({review, id_user}) => {
 
     const [likeUsers, setLikeUsers] = useState(null);
     const [dislikeUsers, setDislikeUsers] = useState(null);
+
 
     useEffect(() => {
 

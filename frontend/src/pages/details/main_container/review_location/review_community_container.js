@@ -52,7 +52,7 @@ const ReviewCommunity = ({ reviews, reload }) => {
         };
 
         fetchUserDetailsForReviews();
-    }, [reviews, authorReview]);
+    }, [reviews, authorReview, reload]);
 
 
     /// ---> get actual user
@@ -80,7 +80,7 @@ const ReviewCommunity = ({ reviews, reload }) => {
         }
 
         fetchUserDetails();
-    }, []);
+    }, [reviews, reload]);
 
     useEffect(() => {
         setLocalReviews(reviews);
@@ -116,8 +116,20 @@ const ReviewCommunity = ({ reviews, reload }) => {
         setEditedComment(comment);
     }
 
+    /// edit rating
+    const updateReview = (id, newRating, newComment) => {
+        setLocalReviews(prevReviews => 
+            prevReviews.map(review => 
+                review.id === id ? { ...review, rating: newRating, comment: newComment } : review
+            )
+        );
+    };
+
     const handleEditRating = (event, newValue) => {
+
         setEditRating(newValue);
+        updateReview(editingReview, newValue);
+
     };
 
     const handleSaveEdit = async (id_review) => {
@@ -345,10 +357,9 @@ const ReviewCommunity = ({ reviews, reload }) => {
                                 </div>
 
                                 {editingReview === review.id ? (
-                                    <CustomRating name="half-rating-read" onChange={handleEditRating} defaultValue={review.rating} precision={0.5} className='text-primary-black'/>
-
+                                    <CustomRating name="half-rating-read" onChange={handleEditRating} value={review.rating} precision={0.5} className='text-primary-black'/>
                                 ) : (
-                                    <CustomRating name="half-rating-read" defaultValue={review.rating} precision={0.5} className='text-primary-black' readOnly />
+                                    <CustomRating name="half-rating-read" value={review.rating} precision={0.5} className='text-primary-black' readOnly />
                                 )}
                             </div>
 
@@ -435,7 +446,7 @@ const ReviewCommunity = ({ reviews, reload }) => {
                             
                             <div className='flex w-full justify-between'>
                                 <div className={`status-${review.id} flex ml-10 mt-2 items-center`}>
-                                    <LikeReview review={review} id_user={userId} />
+                                    <LikeReview review={review} id_user={userId} reload={reload} />
 
                                     <div className='replies flex items-center ml-4 cursor-pointer' onClick={() => handleViewReply(review.id)}>
                                         <FontAwesomeIcon icon={RegC} style={{ height: '15px', width: '20px' }} />

@@ -4,8 +4,28 @@ import BioComponent from "./bio";
 import ExtraInfo from "./extraInfo";
 
 const MainProfilePage = () => {
-    const url1 = 'http://localhost:8000/api/user/profile/';
-    const url2 = 'http://localhost:8000/api/auth/user/';
+    let url1 = '';
+    let url2 = '';
+    let url3 = '';
+
+    const urlString = window.location.search;
+    const urlParams = new URLSearchParams(urlString);
+    let visiting = false;
+
+    if (urlParams.has('visit')) {
+
+        const paramValue = urlParams.get('visit');
+        url1 = `http://localhost:8000/api/user/profile/?visit=${paramValue}`;
+        url2 = `http://localhost:8000/api/auth/user/`;
+        url3 = `http://localhost:8000/api/auth/user_details/?id=${paramValue}`;
+
+        visiting = true;
+    } else {
+        url1 = `http://localhost:8000/api/user/profile/`;
+        url2 = 'http://localhost:8000/api/auth/user/';
+        visiting = false;
+    }
+    
 
     const [profileData, setProfileData] = useState({
         profilePhoto: '',
@@ -19,7 +39,7 @@ const MainProfilePage = () => {
 
     const [userData, setUserData] = useState({
         email: '',
-        name: ''
+        name: '',
     });
 
     useEffect(() => {
@@ -49,24 +69,48 @@ const MainProfilePage = () => {
                     throw new Error('Server response not ok.');
                 }
 
-                // Fetch pentru detalii utilizator
-                const response2 = await fetch(url2, {
-                    method: 'GET',
-                    credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response2.ok) {
-                    const data2 = await response2.json();
-                    setUserData({
-                        email: data2.user.email,
-                        name: data2.user.name
+                // Fetch pentru detalii utilizator acelasi
+                if (visiting === false) {
+                    const response2 = await fetch(url2, {
+                        method: 'GET',
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
                     });
+    
+                    if (response2.ok) {
+                        const data2 = await response2.json();
+                        setUserData({
+                            email: data2.user.email,
+                            name: data2.user.name,
+                        });
+                    } else {
+                        throw new Error('Server response not ok.');
+                    }
                 } else {
-                    throw new Error('Server response not ok.');
+                    const response2 = await fetch(url3, {
+                        method: 'GET',
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+    
+                    if (response2.ok) {
+                        const data2 = await response2.json();
+                        setUserData({
+                            email: data2.data.email,
+                            name: data2.data.name,
+                        });
+                    } else {
+                        throw new Error('Server response not ok.');
+                    }
                 }
+
+
+
+
             } catch (error) {
                 console.error('Problem fetching data: ', error);
             }
@@ -76,7 +120,7 @@ const MainProfilePage = () => {
     }, [url1, url2]);
 
     return (
-        <div className="main-profile-container flex flex-col items-center">
+        <div className="main-profile-container flex flex-col items-center bg-primary-white">
             <BackgroundComponent photo={profileData.backPhoto} />
             <BioComponent
                 photo={profileData.profilePhoto}
@@ -87,6 +131,8 @@ const MainProfilePage = () => {
                 role={profileData.role}
                 email={userData.email}
                 phone={profileData.phone}
+                visiting={visiting}
+                id={urlParams.get('visit')}
             />
             <ExtraInfo email={userData.email} phone={profileData.phone} />
         </div>

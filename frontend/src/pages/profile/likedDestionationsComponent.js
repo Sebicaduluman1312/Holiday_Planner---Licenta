@@ -11,8 +11,21 @@ const LikedDestinationsComponent = () => {
     
     const [destinations, setDestinations] = useState([]);
 
-    const url = 'http://localhost:8000/api/user/like/';
+    let url = '';
     
+    const urlString = window.location.search;
+    const urlParams = new URLSearchParams(urlString);
+
+    if (urlParams.has('visit')) {
+
+        const paramValue = urlParams.get('visit');
+        url = `http://localhost:8000/api/user/like/?visit=${paramValue}`;
+
+    } else {
+        url = `http://localhost:8000/api/user/like/`;
+    }
+
+
     useEffect(() => {
         const fetchLikedDestinations = async () => {
             await fetch(url, {

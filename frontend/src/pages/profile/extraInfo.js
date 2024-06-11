@@ -6,7 +6,7 @@ import LikedDestinationsComponent from './likedDestionationsComponent';
 const ExtraInfo = (props) => {
 
     const [planSection, setPlanSection] = useState(false);
-    const [destinationsSection, setDestinationSection] = useState(false);
+    const [destinationsSection, setDestinationSection] = useState(true);
     const [likedPlanSection, setLikedPlanSection] = useState(false);
     const [postSection, setPostSection] = useState(false);
 
@@ -42,7 +42,7 @@ const ExtraInfo = (props) => {
 
 
     return (
-        <div className="w-screen flex flex-col items-center bg-primary-white">
+        <div className="w-screen flex flex-col items-center bg-primary-white mt-2">
             <div className="category-section w-5/6 flex flex-col">
                 <div className="h-10 bg-primary-white flex place-items-center justify-evenly mb-4">
                     <div className='hover:bg-primary-gray p-2 rounded-xl cursor-pointer' onClick={handleUserPlans}>

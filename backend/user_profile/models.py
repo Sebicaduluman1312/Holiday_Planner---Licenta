@@ -36,3 +36,9 @@ class LikedLocations(models.Model):
     destination_category = models.CharField(max_length=255, null=True)
     category_icon = models.CharField(max_length=255, null=True)
     photo_url = models.CharField(max_length=255, null=True)
+
+class Follow(models.Model):
+    followed_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followed_by_set')
+    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following_set')
+    class Meta:
+        unique_together = [['followed_user', 'follower']]

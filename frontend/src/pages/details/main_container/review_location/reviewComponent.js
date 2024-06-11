@@ -40,7 +40,7 @@ const ReviewLocation = ({rating, id}) => {
         }
 
         fetchReviews();
-    }, [id, reloadReviews]);
+    }, [reloadReviews, id]);
 
     useEffect(() => {
         if (communityReviews.length > 0) {
@@ -52,7 +52,7 @@ const ReviewLocation = ({rating, id}) => {
             const average = sum / communityReviews.length;
             setCommunityRating(average);
         }
-    }, [communityReviews]);
+    }, [communityReviews, reloadReviews]);
 
 
     ///rerender

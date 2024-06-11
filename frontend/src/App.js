@@ -8,6 +8,7 @@ import HomeComponent from './pages/home/home';
 import MainSearchPage from './pages/search/mainSearchPage';
 import MainProfilePage from './pages/profile/mainProfilePage';
 import LocationDetails from './pages/details/locationDetails';
+import Planner from './pages/planner/MainPlannerPage';
 
 function App() {
 
@@ -28,6 +29,8 @@ function App() {
           <PrivateRoute exact path="/profile" component={MainProfilePage}/>
 
           <PrivateRoute exact path="/details" component={LocationDetails}/>
+
+          <PrivateRoute exact path="/planner" component={Planner}/>
 
 
         </Switch>

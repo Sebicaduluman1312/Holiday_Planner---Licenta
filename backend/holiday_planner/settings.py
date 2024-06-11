@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'search_feature',
     'authentication',
     'user_profile',
+    'planner',
 
 ]
 

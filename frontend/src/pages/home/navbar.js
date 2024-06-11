@@ -20,7 +20,7 @@ const NavBar = () => {
                     Home
                     <span className="absolute inset-x-0 bottom-[-3px] h-0.5 bg-primary-black-blue transform scale-x-0 transition-transform origin-center group-hover:scale-x-100"></span>
                 </Link>
-                <Link to='/create-plane' className='text-sm text-primary-gray font-semibold group relative hover:text-primary-black-blue'>
+                <Link to='/planner' className='text-sm text-primary-gray font-semibold group relative hover:text-primary-black-blue'>
                     Create plan
                     <span className="absolute inset-x-0 bottom-[-3px] h-0.5 bg-primary-black-blue transform scale-x-0 transition-transform origin-center group-hover:scale-x-100"></span>
                 </Link>

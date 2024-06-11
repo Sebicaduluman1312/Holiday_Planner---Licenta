@@ -9,6 +9,7 @@ import MainSearchPage from './pages/search/mainSearchPage';
 import MainProfilePage from './pages/profile/mainProfilePage';
 import LocationDetails from './pages/details/locationDetails';
 import Planner from './pages/planner/MainPlannerPage';
+import MainEditPlan from './pages/planner/EditPlan/MainEditPlan';
 
 function App() {
 
@@ -31,6 +32,8 @@ function App() {
           <PrivateRoute exact path="/details" component={LocationDetails}/>
 
           <PrivateRoute exact path="/planner" component={Planner}/>
+
+          <PrivateRoute exact path="/planner/edit" component={MainEditPlan} />
 
 
         </Switch>

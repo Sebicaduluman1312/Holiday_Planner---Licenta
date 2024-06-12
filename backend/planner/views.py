@@ -2,11 +2,13 @@ import jwt
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.status import HTTP_409_CONFLICT, HTTP_401_UNAUTHORIZED, HTTP_201_CREATED, HTTP_200_OK, HTTP_404_NOT_FOUND
+from rest_framework.status import HTTP_409_CONFLICT, HTTP_401_UNAUTHORIZED, HTTP_201_CREATED, HTTP_200_OK, HTTP_404_NOT_FOUND, HTTP_204_NO_CONTENT
 
 from .utils.formata_data import get_user_id
+from .utils.autocomplete import get_autocomplete_destination
 from .serializer import PlanSerializer
 from .models import Plan
+
 
 class PlanView(APIView):
     def post(self, request):
@@ -62,3 +64,14 @@ class PlanView(APIView):
 
         except Exception as e:
             return Response({'message': f'Internal error in deleting plan! Error: {e}'}, HTTP_409_CONFLICT)
+
+
+class AutocompletePlanner(APIView):
+    def get(self, request):
+        string = request.query_params['string']
+        destinations = get_autocomplete_destination(string)
+
+        if destinations:
+            return Response({'destinations': destinations}, HTTP_200_OK)
+        else:
+            return Response(status=HTTP_204_NO_CONTENT)

@@ -5,7 +5,8 @@ def extract_specific_locations_from_json(locations):
     modified_locations = {}
 
     for index, location in enumerate(locations):
-        modified_locations[f'location-{index}'] = location['text']
+        if 'll' in location:
+            modified_locations[f'location-{index}'] = (location['text'], location['ll']['lat'], location['ll']['lng'])
 
     return modified_locations
 
@@ -15,7 +16,6 @@ def get_autocomplete_destination(string):
 
     headers = {"accept": "application/json"}
     response = requests.get(url, headers=headers).json()
-    print(response)
 
     return extract_specific_locations_from_json(response['response']['results'])
 

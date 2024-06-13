@@ -5,12 +5,17 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
 import { useDrop } from 'react-dnd';
 import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faClock } from '@fortawesome/free-regular-svg-icons'
+import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
+
+
 
 const ItemTypes = {
     IMAGE: 'image',
 };
 
-const Item = ({ image, onDrop }) => {
+const Item = ({ image, onDrop, onDelete }) => {
     const [{ isOver }, drop] = useDrop(() => ({
         accept: ItemTypes.IMAGE,
         drop: (item) => {
@@ -39,7 +44,15 @@ const Item = ({ image, onDrop }) => {
     }
 
     const handleSaveItem = () => {
+        setSaveItem(true);
+    }
+
+    const handleEdit = () => {
         setSaveItem(false);
+        setDescription(null);
+        setEndHour(null);
+        setStartHour(null);
+
     }
 
     return (
@@ -49,12 +62,24 @@ const Item = ({ image, onDrop }) => {
             </div>
             <div className='flex-col ml-10 w-3/4'>
                 {
-                    image ? <h1 className='font-semibold mb-2'>{image.name}</h1> : <></>
+                    image ? 
+                        <div className='flex items-center justify-between'> 
+                            <h1 className='font-semibold mb-2'>{image.name}</h1> 
+                            <div>
+                                <FontAwesomeIcon icon={faPen} className='text-primary-black mb-2 cursor-pointer mr-2' onClick={handleEdit}/>
+                                <FontAwesomeIcon icon={faTrash} className='mb-2 cursor-pointer ml-2 text-red-500' onClick={onDelete}/>
+                            </div>
+
+                        </div>
+                    : <></>
                 }
                 <div className="hour">
                 {
                     saveItem ?
-                        <p>{startHour} - {endHour}</p> :
+                        <div className='flex items-center mb-1'>
+                            <FontAwesomeIcon icon={faClock} className='text-primary-black'/>
+                            <p className='text-sm font-bold ml-2 text-primary-gray'>{startHour} - {endHour}</p>
+                        </div> :
                         <div className='flex mb-4'>
                             <span>Start: </span>
                             <input type="text" name="" id="" className='w-20 ml-2 rounded-md border border-primary-black mr-10 pl-2' onChange={handleChangeStartHour}/>
@@ -64,7 +89,7 @@ const Item = ({ image, onDrop }) => {
                 }
                 </div>
                 {
-                    saveItem ? <p>{description}</p> : 
+                    saveItem ? <p className='ml-4 text-sm'>{description}</p> : 
                         <input type="text" className='border border-primary-black text-sm p-2 rounded-md w-full mb-2' placeholder='What do you want to do here..' onChange={handleChangeDescription} />
                 }
                 {
@@ -75,7 +100,7 @@ const Item = ({ image, onDrop }) => {
     );
 };
 
-const DayAccordion = ({ day, items, onDrop, addItem }) => {
+const DayAccordion = ({ day, items, onDrop, addItem, deleteItem }) => {
     const [title, setTitle] = useState(null);
     const [summary, setSummary] = useState(null);
     const [save, setSave] = useState(false);
@@ -92,6 +117,8 @@ const DayAccordion = ({ day, items, onDrop, addItem }) => {
     const handleSaveData = () => {
         setSave(true);
     }
+
+    ///--> fetch pentru items get, + post pentru itinerary + get verificam daca nu sunt detalii trebuie sa editam 
 
     return (
         <Accordion>
@@ -117,7 +144,7 @@ const DayAccordion = ({ day, items, onDrop, addItem }) => {
                         !save ? <Button variant="contained" color="primary" onClick={handleSaveData} sx={{marginBottom:"20px", width: '20%'}}>Save data</Button> : <></>
                     }
                     {items.map((item, index) => (
-                        <Item key={index} image={item.image} onDrop={(image) => onDrop(day, index, image)} />
+                        <Item key={index} image={item.image} onDrop={(image) => onDrop(day, index, image)}  onDelete={() => deleteItem(day, index)} />
                     ))}
                     <Button variant="contained" color="primary" onClick={() => addItem(day)}>
                         Add Item
@@ -154,12 +181,22 @@ const DaysComponent = () => {
         }));
     };
 
-    ///fetch pentru numarul de zile ca sa fac acordeoanele
+    const deleteItem = (day, index) => {
+        setDayItems(prev => {
+            const updatedItems = prev[day].filter((_, i) => i !== index);
+            return {
+                ...prev,
+                [day]: updatedItems
+            };
+        });
+    };
+
+    ///fetch pentru numarul de zile ca sa fac acordeoanele deodata ce fac si acordeoanele fac creez si itinerariul
 
     return (
         <div className='w-2/3 mt-4 mb-4'>
-            <DayAccordion day={1} items={dayItems[1]} onDrop={handleDrop} addItem={addItem} />
-            <DayAccordion day={2} items={dayItems[2]} onDrop={handleDrop} addItem={addItem} />
+            <DayAccordion day={1} items={dayItems[1]} onDrop={handleDrop} addItem={addItem} deleteItem={deleteItem} />
+            <DayAccordion day={2} items={dayItems[2]} onDrop={handleDrop} addItem={addItem} deleteItem={deleteItem} />
         </div>
     );
 }

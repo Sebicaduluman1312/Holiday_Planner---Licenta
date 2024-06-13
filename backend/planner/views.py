@@ -9,6 +9,11 @@ from .utils.autocomplete import get_autocomplete_destination
 from .serializer import PlanSerializer
 from .models import Plan
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from .utils.getlocations import get_polygon_locations, format_locations_reponse
+from functools import reduce
+
+from search_feature.utils.photos_service import add_photo_to_location
 
 class PlanView(APIView):
     def post(self, request):
@@ -75,3 +80,20 @@ class AutocompletePlanner(APIView):
             return Response({'destinations': destinations}, HTTP_200_OK)
         else:
             return Response(status=HTTP_204_NO_CONTENT)
+
+class MapLocationView(APIView):
+    def post(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if token is None:
+            return Response({'message': 'User not logged in!'}, HTTP_401_UNAUTHORIZED)
+        try:
+            polygon = request.data['polygon']
+
+            api_response = get_polygon_locations(polygon)
+            api_locations = add_photo_to_location(format_locations_reponse(api_response))
+
+            return Response(api_locations, HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'message': f'Internal error in getting map locations! Error: {e}'}, HTTP_409_CONFLICT)

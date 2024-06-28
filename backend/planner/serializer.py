@@ -14,4 +14,4 @@ class ItinerarySerializer(serializers.ModelSerializer):
 class ItineraryItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = ItineraryItem
-        fields = '__al__'
+        fields = '__all__'

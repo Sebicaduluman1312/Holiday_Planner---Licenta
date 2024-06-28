@@ -4,7 +4,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
 import { useDrop } from 'react-dnd';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClock } from '@fortawesome/free-regular-svg-icons'
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
@@ -15,7 +15,7 @@ const ItemTypes = {
     IMAGE: 'image',
 };
 
-const Item = ({ image, onDrop, onDelete }) => {
+const Item = ({ image, onDrop, onDelete, id }) => {
     const [{ isOver }, drop] = useDrop(() => ({
         accept: ItemTypes.IMAGE,
         drop: (item) => {
@@ -26,10 +26,13 @@ const Item = ({ image, onDrop, onDelete }) => {
         }),
     }));
 
-    const [saveItem, setSaveItem] = useState(false);
+
+
+    const [saveItem, setSaveItem] = useState(null);
     const [startHour, setStartHour] = useState(null);
     const [endHour, setEndHour] = useState(null);
     const [description, setDescription] = useState(null);
+    const [idItem, setIdItem] = useState(null);
 
     const handleChangeStartHour = (event) => {
         setStartHour(event.target.value);
@@ -43,8 +46,44 @@ const Item = ({ image, onDrop, onDelete }) => {
         setDescription(event.target.value);
     }
 
-    const handleSaveItem = () => {
+    const handleSaveItem = async (idItem) => {
         setSaveItem(true);
+        const url = 'http://localhost:8000/api/planner/itinerary_item/';
+        const dataToSend = {
+            'itinerary': id,
+            'photo': image.photo_url,
+            'location': image.name,
+            'description': description,
+            'start_hour': startHour,
+            'end_hour': endHour,
+        };
+
+        if(idItem){
+            dataToSend['id_item'] = idItem;
+        }
+
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataToSend),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const result = await response.json();
+            console.log('Data saved successfully:', result);
+            setIdItem(result.id);
+
+        } catch (error) {
+            console.error('Error saving data:', error);
+        }
     }
 
     const handleEdit = () => {
@@ -52,9 +91,47 @@ const Item = ({ image, onDrop, onDelete }) => {
         setDescription(null);
         setEndHour(null);
         setStartHour(null);
-
     }
 
+    const handleDelete = async () => {
+        if (saveItem) {
+            const url = 'http://localhost:8000/api/planner/itinerary_item/';
+            const dataToSend = {
+                'itinerary': id,
+                'photo': image.photo_url,
+                'location': image.name,
+                'description': description,
+                'start_hour': startHour,
+                'end_hour': endHour,
+            };
+
+            if(idItem){
+                dataToSend['id_item'] = idItem;
+            }
+
+            try {
+                const response = await fetch(url, {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dataToSend),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                console.log(result);
+
+            } catch (error) {
+                console.error('Error saving data:', error);
+            }
+        }
+
+    }
     return (
         <div className='flex mb-6' ref={drop} style={{ backgroundColor: isOver ? 'lightgray' : 'white' }}>
             <div className='w-1/4 bg-primary-black-blue h-40 rounded-xl'>
@@ -67,7 +144,7 @@ const Item = ({ image, onDrop, onDelete }) => {
                             <h1 className='font-semibold mb-2'>{image.name}</h1> 
                             <div>
                                 <FontAwesomeIcon icon={faPen} className='text-primary-black mb-2 cursor-pointer mr-2' onClick={handleEdit}/>
-                                <FontAwesomeIcon icon={faTrash} className='mb-2 cursor-pointer ml-2 text-red-500' onClick={onDelete}/>
+                                <FontAwesomeIcon icon={faTrash} className='mb-2 cursor-pointer ml-2 text-red-500' onClick={() => {onDelete();  handleDelete(idItem); }}/>
                             </div>
 
                         </div>
@@ -93,18 +170,23 @@ const Item = ({ image, onDrop, onDelete }) => {
                         <input type="text" className='border border-primary-black text-sm p-2 rounded-md w-full mb-2' placeholder='What do you want to do here..' onChange={handleChangeDescription} />
                 }
                 {
-                    !saveItem ? <button color="primary" onClick={handleSaveItem} className='text-primary-white bg-primary-black-blue hover:bg-primary-black p-2 rounded-xl text-sm'>Save item</button> : <></>
+                    !saveItem ? <button color="primary" onClick={() => handleSaveItem(idItem)} className='text-primary-white bg-primary-black-blue hover:bg-primary-black p-2 rounded-xl text-sm'>Save item</button> : <></>
                 }
             </div>
         </div>
     );
 };
 
-const DayAccordion = ({ day, items, onDrop, addItem, deleteItem }) => {
+const DayAccordion = ({ day, items, onDrop, addItem, deleteItem }) => {    
     const [title, setTitle] = useState(null);
     const [summary, setSummary] = useState(null);
     const [save, setSave] = useState(false);
+    const [alreadyExistContent, setAlreadyExistContent] = useState([]);
+    const [itineraryId, setItineraryId] = useState(null);
 
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const plan = urlParams.get('plan');
 
     const handleChangeTitle = (event) => {
         setTitle(event.target.value);
@@ -114,11 +196,82 @@ const DayAccordion = ({ day, items, onDrop, addItem, deleteItem }) => {
         setSummary(event.target.value);
     }
 
-    const handleSaveData = () => {
-        setSave(true);
+    const handleEditData = () => {
+        setSave(false);
     }
 
-    ///--> fetch pentru items get, + post pentru itinerary + get verificam daca nu sunt detalii trebuie sa editam 
+    useEffect(() => {
+        async function fetchDetailsItinerary() {
+            
+            const response = await fetch(`http://localhost:8000/api/planner/itinerary/?plan=${plan}&day=${day}`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const result = await response.json();
+            if ('message' in result) {
+            } else {
+                setTitle(result.title);
+                setSummary(result.summary);
+                setItineraryId(result.id);
+                setSave(true);
+
+                async function fetchDetailsItinerary(id) {
+            
+                    const response = await fetch(`http://localhost:8000/api/planner/itinerary_item/?itinerary=${id}`, {
+                        method: 'GET',
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+        
+                    const result = await response.json();
+                    setAlreadyExistContent(result);
+                }
+        
+                fetchDetailsItinerary(result.id);
+            }
+        }
+
+        fetchDetailsItinerary();
+    }, [day]);
+
+    const handleSaveData = async () => {
+        setSave(true);
+        const url = 'http://localhost:8000/api/planner/itinerary/';
+        const dataToSend = {
+            'plan': plan,
+            'title': title,
+            'summary': summary,
+            'day': day
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataToSend),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const result = await response.json();
+            console.log('Data saved successfully:', result);
+
+        } catch (error) {
+            console.error('Error saving data:', error);
+        }
+
+    }
 
     return (
         <Accordion>
@@ -132,7 +285,8 @@ const DayAccordion = ({ day, items, onDrop, addItem, deleteItem }) => {
             <AccordionDetails>
                 <div className='flex flex-col'>
                     {
-                        save ? <h1 className='font-semibold text-lg'>Summary - {title}</h1> :
+                        save ? <h1 className='font-semibold text-lg flex justify-between items-center'>Summary - {title} <FontAwesomeIcon icon={faPen} className='text-primary-black mb-2 cursor-pointer mr-2' onClick={handleEditData}/>
+                        </h1> :
                             <input type="text" placeholder='Set title..' onChange={handleChangeTitle} className='border border-primary-black mb-2 p-2 rounded-md'/>
                     }
                     {
@@ -143,8 +297,15 @@ const DayAccordion = ({ day, items, onDrop, addItem, deleteItem }) => {
                     {
                         !save ? <Button variant="contained" color="primary" onClick={handleSaveData} sx={{marginBottom:"20px", width: '20%'}}>Save data</Button> : <></>
                     }
+                    {
+                        alreadyExistContent.length > 0 ? 
+                            alreadyExistContent.map((item, index) => (
+                                <Item  key={index} image={item.photo} onDrop={(image) => onDrop(day, index, image)}  onDelete={() => deleteItem(day, index)} id={itineraryId}/>
+                            ))
+                        : <></> 
+                    }
                     {items.map((item, index) => (
-                        <Item key={index} image={item.image} onDrop={(image) => onDrop(day, index, image)}  onDelete={() => deleteItem(day, index)} />
+                        <Item  key={index} image={item.image} onDrop={(image) => onDrop(day, index, image)}  onDelete={() => deleteItem(day, index)} id={itineraryId}/>
                     ))}
                     <Button variant="contained" color="primary" onClick={() => addItem(day)}>
                         Add Item
@@ -156,12 +317,43 @@ const DayAccordion = ({ day, items, onDrop, addItem, deleteItem }) => {
 };
 
 const DaysComponent = () => {
-    const initialDayItems = {
-        1: [],
-        2: []
-    };
+    const [data, setData] = useState(null);
+    const [initialDayItems, setInitialDayItems] = useState({});
+    const [dayItems, setDayItems] = useState({});
+    const urlParams = new URLSearchParams(window.location.search);
+    const plan = urlParams.get('plan');
 
-    const [dayItems, setDayItems] = useState(initialDayItems);
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const response = await fetch(`http://localhost:8000/api/planner/get_days/?day=${plan}`, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const result = await response.json();
+                setData(result);
+
+                let days_items = {};
+                const days = result.number_of_days; 
+                for (let i = 1; i <= days; i++) {
+                    days_items[`${i}`] = [];
+                }
+
+                setInitialDayItems(days_items); 
+                setDayItems(days_items);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                
+            }
+        }
+
+        fetchData();
+    }, []);
+        
 
     const handleDrop = (day, index, image) => {
         setDayItems(prev => {
@@ -191,14 +383,25 @@ const DaysComponent = () => {
         });
     };
 
-    ///fetch pentru numarul de zile ca sa fac acordeoanele deodata ce fac si acordeoanele fac creez si itinerariul
 
     return (
         <div className='w-2/3 mt-4 mb-4'>
-            <DayAccordion day={1} items={dayItems[1]} onDrop={handleDrop} addItem={addItem} deleteItem={deleteItem} />
-            <DayAccordion day={2} items={dayItems[2]} onDrop={handleDrop} addItem={addItem} deleteItem={deleteItem} />
+            {data ? (
+                Array.from({ length: data.number_of_days }, (_, i) => (
+                    <DayAccordion
+                        key={i + 1}
+                        day={i + 1}
+                        items={dayItems[i + 1]}
+                        onDrop={handleDrop}
+                        addItem={addItem}
+                        deleteItem={deleteItem}
+                    />
+                ))
+            ) : (
+                <div>Loading</div>
+            )}
         </div>
     );
-}
+};
 
 export default DaysComponent;

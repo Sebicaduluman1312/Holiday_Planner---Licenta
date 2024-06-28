@@ -7,4 +7,6 @@ urlpatterns = [
     path('autocomplete/', views.AutocompletePlanner.as_view(), name='autocomplete_planner'),
     path('map_location/', views.MapLocationView.as_view(), name='map_location'),
     path('itinerary/', views.ItineraryView.as_view(), name='itinerary'),
+    path('itinerary_item/', views.ItineraryItemView.as_view(), name='itinerary_item'),
+    path('get_days/', views.DayPlansView.as_view(), name='days'),
 ]

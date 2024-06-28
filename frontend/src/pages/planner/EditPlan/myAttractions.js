@@ -54,7 +54,6 @@ const LikedLocations = () => {
                 })
                 .then(data => {
                     setDestinations(data.message);
-                    console.log(data.message);
                 })
                 .catch(error => {
                     console.error('Problem fetch: ', error)

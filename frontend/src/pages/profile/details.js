@@ -310,7 +310,7 @@ const DetailComponent = (props) => {
                             followersInformation ?
                                 followersInformation.map((user, index) =>(
                                     <div key={index} className='flex justify-between' >
-                                        <div className='flex w-2/3 cursor-pointer'>
+                                        <div className='flex mt-4 w-2/3 cursor-pointer'>
                                             <Avatar alt={user.data.name} src={user.profile.profile_image} sx={{ width: 56, height: 56 }}></Avatar>
                                             <div className='ml-6'>
                                                 <p className='text-lg font-semibold'>{user.data.name}</p>
@@ -323,8 +323,8 @@ const DetailComponent = (props) => {
                                         <div className='w-1/3 items-center'>
                                             {
                                                 user.data.id == ownerUser ?
-                                                    <div className='text-sm mt-1'>(Me)</div>:
-                                                    <button className='bg-primary-black p-2 mt-2 mr-2 rounded-xl text-primary-white hover:bg-primary-black-blue' onClick={() => handleRedirectUserProfile(user.data.id)}>
+                                                    <div className='text-sm mt-4'>(Me)</div>:
+                                                    <button className='bg-primary-black p-2 mt-4 mr-2 rounded-xl text-primary-white hover:bg-primary-black-blue' onClick={() => handleRedirectUserProfile(user.data.id)}>
                                                         <FontAwesomeIcon icon={faEye} className='text-primary-white mr-2'/>
                                                         View profile
                                                     </button>

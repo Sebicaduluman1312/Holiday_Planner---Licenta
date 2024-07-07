@@ -28,10 +28,6 @@ const NavBar = () => {
                     Map Plan
                     <span className="absolute inset-x-0 bottom-[-3px] h-0.5 bg-primary-black-blue transform scale-x-0 transition-transform origin-center group-hover:scale-x-100"></span>
                 </Link>
-                <Link to='/blog' className='text-sm text-primary-gray font-semibold group relative hover:text-primary-black-blue'>
-                    Blog
-                    <span className="absolute inset-x-0 bottom-[-3px] h-0.5 bg-primary-black-blue transform scale-x-0 transition-transform origin-center group-hover:scale-x-100"></span>
-                </Link>
             </div>
             <div className="settings w-1/3 flex items-center justify-end ">
                 <button className="text-sm text-primary-black-blue font-semibold mr-6">

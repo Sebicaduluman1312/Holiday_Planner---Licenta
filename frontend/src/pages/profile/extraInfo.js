@@ -7,6 +7,8 @@ import LikedPlans from './likedPlansComponent';
 
 const ExtraInfo = (props) => {
 
+    const urlParams = new URLSearchParams(window.location.search);
+
     const [planSection, setPlanSection] = useState(false);
     const [destinationsSection, setDestinationSection] = useState(false);
     const [likedPlanSection, setLikedPlanSection] = useState(true);
@@ -43,10 +45,12 @@ const ExtraInfo = (props) => {
                         <FontAwesomeIcon icon={faHeart} className='text-primary-black mr-2'/>
                         Liked destinations
                     </div>
-                    <div className='hover:bg-primary-gray p-2 rounded-xl cursor-pointer' onClick={handleUserDestinations}>
+                    {
+                        !urlParams.has('visit') ? <div className='hover:bg-primary-gray p-2 rounded-xl cursor-pointer' onClick={handleUserDestinations}>
                         <FontAwesomeIcon icon={faThumbsUp} className='text-primary-black mr-2'/>
                         Liked plans
-                    </div>
+                        </div> : <></>
+                    }
                 </div>
 
                 {

@@ -275,10 +275,14 @@ class LikePlanView(APIView):
         try:
             user_id = get_user_id(token)
             liked_plans = LikePlan.objects.filter(author=user_id)
+            plans_data = []
+            for liked_plan in liked_plans:
+                plan_id = liked_plan.id_plan
+                plan = Plan.objects.filter(id=plan_id).first()
+                plan_serializer = PlanSerializer(plan)
+                plans_data.append(plan_serializer.data)
 
-            liked_plan_serializer = LikePlanSerializer(liked_plans, many=True)
-
-            return Response({'message': liked_plan_serializer.data}, HTTP_200_OK)
+            return Response({'data': plans_data}, HTTP_200_OK)
 
         except Exception as e:
             return Response({'message': f'Internal error in get liked plans! Error: {e}'}, HTTP_409_CONFLICT)

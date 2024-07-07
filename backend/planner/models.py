@@ -29,6 +29,6 @@ class ItineraryItem(models.Model):
 
 class LikePlan(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    id_plan = models.IntegerField(null=True)
+    id_plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
 
 

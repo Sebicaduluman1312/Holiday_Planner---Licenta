@@ -2,43 +2,33 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart, faEnvelope, faThumbsUp, faClipboard, faPhone, faUsers, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react'
 import LikedDestinationsComponent from './likedDestionationsComponent';
+import UserPlansComponent from './userPlansComponent';
+import LikedPlans from './likedPlansComponent';
 
 const ExtraInfo = (props) => {
 
     const [planSection, setPlanSection] = useState(false);
-    const [destinationsSection, setDestinationSection] = useState(true);
-    const [likedPlanSection, setLikedPlanSection] = useState(false);
-    const [postSection, setPostSection] = useState(false);
+    const [destinationsSection, setDestinationSection] = useState(false);
+    const [likedPlanSection, setLikedPlanSection] = useState(true);
 
 
     const handleUserPlans = () => {
         setPlanSection(true);
         setDestinationSection(false);
         setLikedPlanSection(false);
-        setPostSection(false);
     }
 
     const handleUserDestinations = () => {
         setPlanSection(false);
         setDestinationSection(true);
         setLikedPlanSection(false);
-        setPostSection(false);
     }
 
     const handleUserLikedPlans = () => {
         setPlanSection(false);
         setDestinationSection(false);
         setLikedPlanSection(true);
-        setPostSection(false);
     }
-
-    const handleUserPosts = () => {
-        setPlanSection(false);
-        setDestinationSection(false);
-        setLikedPlanSection(false);
-        setPostSection(true);
-    }
-
 
 
     return (
@@ -49,26 +39,21 @@ const ExtraInfo = (props) => {
                         <FontAwesomeIcon icon={faEnvelope} className='text-primary-black mr-2'/>
                         My plans
                     </div>
-                    <div className='hover:bg-primary-gray p-2 rounded-xl cursor-pointer' onClick={handleUserDestinations}>
+                    <div className='hover:bg-primary-gray p-2 rounded-xl cursor-pointer' onClick={handleUserLikedPlans}>
                         <FontAwesomeIcon icon={faHeart} className='text-primary-black mr-2'/>
                         Liked destinations
                     </div>
-                    <div className='hover:bg-primary-gray p-2 rounded-xl cursor-pointer' onClick={handleUserLikedPlans}>
+                    <div className='hover:bg-primary-gray p-2 rounded-xl cursor-pointer' onClick={handleUserDestinations}>
                         <FontAwesomeIcon icon={faThumbsUp} className='text-primary-black mr-2'/>
                         Liked plans
-                    </div>
-                    <div className='hover:bg-primary-gray p-2 rounded-xl cursor-pointer' onClick={handleUserPosts}>
-                        <FontAwesomeIcon icon={faClipboard} className='text-primary-black mr-2'/>
-                        My Posts
                     </div>
                 </div>
 
                 {
                     planSection ? 
-                        <div>Plan</div> : destinationsSection ? 
-                            <LikedDestinationsComponent /> : likedPlanSection ? 
-                                <div>Liked plans</div> : postSection ? 
-                                    <div>My post</div> : <div>Nimic</div>
+                        <UserPlansComponent /> : likedPlanSection ? 
+                            <LikedDestinationsComponent /> : destinationsSection ? 
+                                <LikedPlans/> : <></>
                 }
 
             </div>

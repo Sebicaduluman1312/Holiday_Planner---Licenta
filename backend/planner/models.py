@@ -27,5 +27,8 @@ class ItineraryItem(models.Model):
     end_hour = models.CharField(max_length=50, null=True)
     day = models.IntegerField(null=True)
 
+class LikePlan(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    id_plan = models.IntegerField(null=True)
 
 

@@ -6,8 +6,8 @@ from rest_framework.status import HTTP_409_CONFLICT, HTTP_401_UNAUTHORIZED, HTTP
 
 from .utils.formata_data import get_user_id
 from .utils.autocomplete import get_autocomplete_destination
-from .serializer import PlanSerializer, ItinerarySerializer, ItineraryItemSerializer
-from .models import Plan, Itinerary, ItineraryItem
+from .serializer import PlanSerializer, ItinerarySerializer, ItineraryItemSerializer, LikePlanSerializer
+from .models import Plan, Itinerary, ItineraryItem, LikePlan
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from .utils.getlocations import get_polygon_locations, format_locations_reponse
@@ -108,7 +108,10 @@ class DayPlansView(APIView):
         if token is None:
             return Response({'message': 'User not logged in!'}, HTTP_401_UNAUTHORIZED)
         try:
-            user_id = get_user_id(token)
+            if 'visit' in request.query_params:
+                user_id = request.query_params['visit']
+            else:
+                user_id = get_user_id(token)
             plan_id = request.query_params['day']
 
             plan_object = Plan.objects.filter(id=plan_id, author=user_id).first()
@@ -166,7 +169,10 @@ class ItineraryView(APIView):
         if token is None:
             return Response({'message': 'User not logged in!'}, HTTP_401_UNAUTHORIZED)
         try:
-            user_id = get_user_id(token)
+            if 'visit' in request.query_params:
+                user_id = request.query_params['visit']
+            else:
+                user_id = get_user_id(token)
             plan_id = request.query_params['plan']
             day = request.query_params['day']
 
@@ -233,4 +239,80 @@ class ItineraryItemView(APIView):
 
         except Exception as e:
             return Response({'message': f'Internal error in creating item! Error: {e}'}, HTTP_409_CONFLICT)
+
+class LikePlanView(APIView):
+    def post(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if token is None:
+            return Response({'message': 'User not logged in!'}, HTTP_401_UNAUTHORIZED)
+        try:
+            user_id = get_user_id(token)
+            plan_id = request.query_params['plan_id']
+
+            if LikePlan.objects.filter(author=user_id, id_plan=plan_id).exists():
+                return Response({'message': 'Location already liked!'}, HTTP_409_CONFLICT)
+
+            like_data = {
+                'author': user_id,
+                'id_plan': plan_id
+            }
+
+            like_serializer = LikePlanSerializer(data=like_data)
+            like_serializer.is_valid(raise_exception=True)
+            like_serializer.save()
+
+            return Response({'message': 'Item successfully liked!'}, HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'message': f'Internal error in like plan! Error: {e}'}, HTTP_409_CONFLICT)
+
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if token is None:
+            return Response({'message': 'User not logged in!'}, HTTP_401_UNAUTHORIZED)
+        try:
+            user_id = get_user_id(token)
+            liked_plans = LikePlan.objects.filter(author=user_id)
+
+            liked_plan_serializer = LikePlanSerializer(liked_plans, many=True)
+
+            return Response({'message': liked_plan_serializer.data}, HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'message': f'Internal error in get liked plans! Error: {e}'}, HTTP_409_CONFLICT)
+
+    def delete(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if token is None:
+            return Response({'message': 'User not logged in!'}, HTTP_401_UNAUTHORIZED)
+        try:
+            user_id = get_user_id(token)
+            plan_id = request.query_params['plan_id']
+
+            liked_plan = LikePlan.objects.filter(author=user_id, id_plan=plan_id).first()
+            liked_plan.delete()
+
+            return Response({'message': 'Plan disliked'}, HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'message': f'Internal error in get liked plans! Error: {e}'}, HTTP_409_CONFLICT)
+class CheckLikedPlanView(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if token is None:
+            return Response({'message': 'User not logged in!'}, HTTP_401_UNAUTHORIZED)
+        try:
+            id_user = get_user_id(token)
+            plan_id = request.query_params['plan_id']
+
+            if LikePlan.objects.filter(author=id_user, id_plan=plan_id).exists():
+                return Response({'message': 'true'}, HTTP_200_OK)
+            else:
+                return Response({'message': 'false'}, HTTP_200_OK)
+        except Exception as e:
+            return Response({'message': f'Internal error in get liked plans! Error: {e}'}, HTTP_409_CONFLICT)
 

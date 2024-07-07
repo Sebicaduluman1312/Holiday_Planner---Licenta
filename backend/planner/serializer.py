@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Plan, Itinerary, ItineraryItem
+from .models import Plan, Itinerary, ItineraryItem, LikePlan
 
 class PlanSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,4 +14,9 @@ class ItinerarySerializer(serializers.ModelSerializer):
 class ItineraryItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = ItineraryItem
+        fields = '__all__'
+
+class LikePlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LikePlan
         fields = '__all__'

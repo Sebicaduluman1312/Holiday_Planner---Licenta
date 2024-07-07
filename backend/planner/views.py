@@ -33,6 +33,8 @@ class PlanView(APIView):
             if data_planner_serializer.is_valid():
                 data_planner_serializer.save()
                 return Response(data_planner_serializer.data, HTTP_200_OK)
+            else:
+                return Response({'message':'fail to create plan'}, HTTP_200_OK)
 
         except Exception as e:
             return Response({'message': f'Internal error in creating plan! Error: {e}'},
@@ -271,21 +273,22 @@ class LikePlanView(APIView):
         token = request.COOKIES.get('jwt')
 
         if token is None:
-            return Response({'message': 'User not logged in!'}, HTTP_401_UNAUTHORIZED)
+            return Response({'message': 'User not logged in!'}, status=HTTP_401_UNAUTHORIZED)
         try:
             user_id = get_user_id(token)
             liked_plans = LikePlan.objects.filter(author=user_id)
             plans_data = []
             for liked_plan in liked_plans:
-                plan_id = liked_plan.id_plan
+                plan_id = liked_plan.id_plan_id
                 plan = Plan.objects.filter(id=plan_id).first()
-                plan_serializer = PlanSerializer(plan)
-                plans_data.append(plan_serializer.data)
+                if plan:
+                    plan_serializer = PlanSerializer(plan)
+                    plans_data.append(plan_serializer.data)
 
-            return Response({'data': plans_data}, HTTP_200_OK)
+            return Response({'data': plans_data}, status=HTTP_200_OK)
 
         except Exception as e:
-            return Response({'message': f'Internal error in get liked plans! Error: {e}'}, HTTP_409_CONFLICT)
+            return Response({'message': f'Internal error in get liked plans! Error: {e}'}, status=HTTP_409_CONFLICT)
 
     def delete(self, request):
         token = request.COOKIES.get('jwt')

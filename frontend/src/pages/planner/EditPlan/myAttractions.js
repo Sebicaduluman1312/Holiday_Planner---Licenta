@@ -64,10 +64,10 @@ const LikedLocations = () => {
     }, []);
 
     return (
-        <div className="w-1/3 mt-4 ml-2 mb-4 flex flex-col">
-            <div className="flex w-full flex-col items-center ml-6">
+        <div className="w-1/3 mt-4 ml-2 mb-4 flex flex-col" style={{ height: '700px' }}>
+            <div className="h-full flex w-full flex-col items-center ml-6">
                 <h1 className="font-semibold text-lg mb-2">Drag a location to your plan</h1>
-                <div className="h-98 w-full border border-primary-black rounded-xl grid grid-cols-2 gap-4 p-4 overflow-auto">
+                <div className="h-full w-full border border-primary-black rounded-xl grid grid-cols-2 gap-4 p-4 overflow-auto">
                     {
                         destinations.map((dest, index) => (
                             <DraggableImage key={index} dest={dest} />

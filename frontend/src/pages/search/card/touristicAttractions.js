@@ -75,7 +75,7 @@ const TouristicAttractions = () => {
             <div className="text-2xl mt-6 text-primary-black">Destinations for {paramsObject['location']}</div>
             <div className="destinations grid grid-cols-3 gap-10 mt-6 mb-6">
                 
-                {   loading ? <div>Loading</div> :
+                {   loading ? <div></div> :
         
                     pagination[actualPage - 1].map((element, elementIndex) => (
                         <CardComponent key={elementIndex} props={element}/>

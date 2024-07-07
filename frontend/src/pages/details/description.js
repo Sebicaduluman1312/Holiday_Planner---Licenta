@@ -43,7 +43,7 @@ const DescriptionComponent = ({locality, name}) => {
                 {description ? (
                     <p>{description.data}</p>
                 ) : (
-                    <p>Loading...</p>
+                    <p></p>
                 )}
             </div>
         </div>

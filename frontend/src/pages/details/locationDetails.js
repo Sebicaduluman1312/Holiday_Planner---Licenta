@@ -49,32 +49,32 @@ const LocationDetails = () => {
             {details && details.data ? (
                 <TitleAttraction data={details.data} id_location={location_id} photo_url={details.data.photos[0]} title={details.data.name} address={details.data.address} category={details.data.destination_category} category_icon={details.data.category_icon} country={details.data.country} locality={details.data.locality}/>
             ) : (
-                <p>Loading...</p>
+                <p></p>
             )}
             
             {details && details.data ? (
                 <MainDetail photos={details.data.photos} locality={details.data.locality} name={details.data.name}/>
             ) : (
-                <p>Loading...</p>
+                <p></p>
             )}
 
             {details && details.data ? (
                 <LocationComponent lat={details.data.lat} lon={details.data.lon} />
             ) : (
-                <p>Loading...</p>
+                <p></p>
             )}
 
 
             {details && details.data ? (
                 <RelatedComponents latitude={details.data.lat} longitude={details.data.lon} fsq_id={location_id}/>
             ) : (
-                <p>Loading...</p>
+                <p></p>
             )}
 
             {details && details.data ? (
                 <ReviewLocation rating={details.data.rating} id={location_id}/>
             ) : (
-                <p>Loading...</p>
+                <p></p>
             )}
 
         </div>

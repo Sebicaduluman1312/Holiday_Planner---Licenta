@@ -1,7 +1,7 @@
 # Holiday_Planner---Licenta
 
 Features:
-• Developed a complex web application, aiming to allow users to search and plan vacations across Europe
+• Developed a complex web application, aiming to allow users to search and plan vacations across Europe \n
 • Integrating advanced functionalities for searching and saving hotels, restaurants, and tourist attractions throughout
 Europe, leveraging data from the Foursquare API and OpenStreetMap database
 • Implemented user authentication system and user profiles to provide personalized experiences for users

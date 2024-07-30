@@ -11,3 +11,4 @@ Features:
 Technologies used: Python, Django REST framework, PostgreSQL, React, Tailwind CSS  
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/hqKZfg75wrA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+

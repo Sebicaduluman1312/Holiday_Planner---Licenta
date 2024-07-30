@@ -8,7 +8,9 @@ Features:
 • Tourist attractions search feature based on an interactive map  
 • Interaction between users through viewing profiles and the review system  
   
-Technologies used: Python, Django REST framework, PostgreSQL, React, Tailwind CSS  
+Technologies used: Python, Django REST framework, PostgreSQL, React, Tailwind CSS.  
+
+DEMO(click the image):  
 
 [![DEMO VIDEO](https://img.youtube.com/vi/hqKZfg75wrA/0.jpg)](https://www.youtube.com/watch?v=hqKZfg75wrA)
 
